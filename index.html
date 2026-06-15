@@ -1,0 +1,1727 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+<meta charset="UTF-8">
+<meta name="viewport" content="width=device-width, initial-scale=1.0">
+<title>FreshMart POS | Grocery Store</title>
+<link href="https://fonts.googleapis.com/css2?family=Poppins:wght@300;400;500;600;700&display=swap" rel="stylesheet">
+<link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/6.4.0/css/all.min.css">
+<style>
+:root{
+  --primary:#3b82f6;--primary-dark:#2563eb;--primary-light:#dbeafe;
+  --secondary:#06b6d4;--danger:#ef4444;--warning:#eab308;
+  --dark:#1e293b;--darker:#0f172a;--light:#f8fafc;--gray:#64748b;--gray-light:#e2e8f0;--white:#ffffff;
+}
+[data-theme="dark"]{
+  --dark:#f1f5f9;--darker:#e2e8f0;--light:#0f172a;--gray:#94a3b8;--gray-light:#1e293b;--white:#1e293b;
+}
+*{margin:0;padding:0;box-sizing:border-box;}body{font-family:'Poppins',sans-serif;background:var(--light);color:var(--dark);transition:background 0.3s,color 0.3s;}
+
+/* Login */
+.login-page{min-height:100vh;display:flex;align-items:center;justify-content:center;background:linear-gradient(135deg,#0c4a6e,#1e40af,#3b82f6);position:relative;overflow:hidden;}
+.login-page::before{content:'';position:absolute;width:500px;height:500px;background:linear-gradient(45deg,#06b6d4,transparent);border-radius:50%;filter:blur(80px);opacity:0.3;top:-100px;left:-100px;}
+.login-page::after{content:'';position:absolute;width:400px;height:400px;background:linear-gradient(45deg,#8b5cf6,transparent);border-radius:50%;filter:blur(80px);opacity:0.2;bottom:-100px;right:-100px;}
+.login-container{background:rgba(255,255,255,0.08);backdrop-filter:blur(20px);border:1px solid rgba(255,255,255,0.15);border-radius:24px;padding:2.5rem;width:100%;max-width:400px;position:relative;z-index:1;box-shadow:0 25px 50px rgba(0,0,0,0.4);}
+.login-logo{text-align:center;margin-bottom:2rem;}.login-logo i{font-size:2.5rem;background:linear-gradient(135deg,#3b82f6,#06b6d4);-webkit-background-clip:text;-webkit-text-fill-color:transparent;margin-bottom:0.5rem;}.login-logo h1{color:#fff;font-size:1.5rem;}.login-logo p{color:rgba(255,255,255,0.6);font-size:0.8rem;}
+.form-group{margin-bottom:1.2rem;}.form-group label{display:block;color:rgba(255,255,255,0.7);font-size:0.8rem;margin-bottom:0.4rem;}
+.input-wrapper{position:relative;}.input-wrapper i{position:absolute;left:1rem;top:50%;transform:translateY(-50%);color:rgba(255,255,255,0.5);}
+.input-wrapper input{width:100%;padding:0.8rem 2.5rem 0.8rem 2.5rem;background:rgba(255,255,255,0.1);border:1px solid rgba(255,255,255,0.2);border-radius:10px;color:#fff;font-family:'Poppins',sans-serif;transition:all 0.3s;}
+.input-wrapper input::placeholder{color:rgba(255,255,255,0.4);}
+.input-wrapper input:focus{outline:none;border-color:#3b82f6;background:rgba(255,255,255,0.15);box-shadow:0 0 0 3px rgba(59,130,246,0.2);}
+
+
+.form-options{display:flex;justify-content:space-between;align-items:center;margin-bottom:1.2rem;font-size:0.8rem;color:rgba(255,255,255,0.6);}
+.remember-me{display:flex;align-items:center;gap:0.5rem;cursor:pointer;}
+.remember-me input{width:16px;height:16px;accent-color:#3b82f6;cursor:pointer;}
+.forgot-password{color:#60a5fa;text-decoration:none;font-weight:500;transition:color 0.3s;}
+.forgot-password:hover{color:#93c5fd;}
+#showPasswordLink:hover{color:#93c5fd;}
+.btn-login{width:100%;padding:0.9rem;background:linear-gradient(135deg,#3b82f6,#06b6d4);color:#fff;border:none;border-radius:10px;font-size:0.95rem;font-weight:600;font-family:'Poppins',sans-serif;cursor:pointer;transition:all 0.3s;display:flex;align-items:center;justify-content:center;gap:0.5rem;position:relative;overflow:hidden;}
+.btn-login::before{content:'';position:absolute;top:0;left:-100%;width:100%;height:100%;background:linear-gradient(90deg,transparent,rgba(255,255,255,0.2),transparent);transition:0.5s;}
+.btn-login:hover::before{left:100%;}
+.btn-login:hover{transform:translateY(-2px);box-shadow:0 10px 30px rgba(59,130,246,0.4);}
+.demo-credentials{margin-top:1rem;padding:0.8rem;background:rgba(59,130,246,0.15);border:1px solid rgba(59,130,246,0.3);border-radius:8px;text-align:center;font-size:0.75rem;color:#93c5fd;}
+.demo-credentials code{color:#60a5fa;font-family:'Courier New',monospace;font-weight:600;}
+
+/* Dashboard */
+.dashboard{display:none;min-height:100vh;}
+.sidebar{position:fixed;left:0;top:0;width:250px;height:100vh;background:linear-gradient(180deg,#0a1628,#0f1f3a,#0a1628);padding:1.5rem;z-index:100;transition:background 0.3s;}
+.sidebar-header{display:flex;align-items:center;gap:0.75rem;padding-bottom:1.2rem;border-bottom:1px solid rgba(255,255,255,0.1);margin-bottom:1.2rem;}
+.sidebar-header i{font-size:1.5rem;background:linear-gradient(135deg,#3b82f6,#06b6d4);-webkit-background-clip:text;-webkit-text-fill-color:transparent;}.sidebar-header h2{color:#fff;font-size:1.1rem;}
+.nav-menu{list-style:none;}.nav-link{display:flex;align-items:center;gap:0.75rem;padding:0.8rem 1rem;color:rgba(255,255,255,0.6);text-decoration:none;border-radius:8px;font-size:0.85rem;transition:all 0.3s;cursor:pointer;}
+.nav-link:hover,.nav-link.active{background:linear-gradient(90deg,rgba(59,130,246,0.2),transparent);color:#60a5fa;border-left:3px solid #3b82f6;}.nav-link i{width:20px;text-align:center;}
+.sidebar-footer{position:absolute;bottom:1.5rem;left:1.5rem;right:1.5rem;}.user-profile{display:flex;align-items:center;gap:0.75rem;padding:0.75rem;background:rgba(255,255,255,0.05);border-radius:8px;cursor:pointer;transition:all 0.3s;border:1px solid rgba(255,255,255,0.05);}
+.user-profile:hover{background:rgba(255,255,255,0.1);border-color:rgba(59,130,246,0.3);}
+.user-avatar{width:36px;height:36px;background:linear-gradient(135deg,#3b82f6,#06b6d4);border-radius:50%;display:flex;align-items:center;justify-content:center;color:#fff;font-weight:600;font-size:0.8rem;}
+.user-info h4{color:#fff;font-size:0.8rem;}.user-info p{color:rgba(255,255,255,0.5);font-size:0.7rem;}
+
+.main-content{margin-left:250px;min-height:100vh;}
+.top-bar{background:var(--white);padding:1rem 2rem;display:flex;justify-content:space-between;align-items:center;box-shadow:0 2px 10px rgba(0,0,0,0.05);position:sticky;top:0;z-index:50;transition:background 0.3s;}
+.page-title h1{font-size:1.3rem;}.page-title p{color:var(--gray);font-size:0.8rem;}
+.top-bar-actions{display:flex;align-items:center;gap:0.75rem;}
+.theme-toggle{width:36px;height:36px;border:1px solid var(--gray-light);border-radius:8px;background:var(--white);color:var(--gray);cursor:pointer;display:flex;align-items:center;justify-content:center;transition:all 0.3s;}
+.theme-toggle:hover{border-color:#3b82f6;color:#3b82f6;}
+.search-box{position:relative;}.search-box input{padding:0.5rem 1rem 0.5rem 2.2rem;border:1px solid var(--gray-light);border-radius:8px;font-family:'Poppins';font-size:0.8rem;width:220px;background:var(--white);color:var(--dark);transition:all 0.3s;}
+.search-box input:focus{outline:none;border-color:#3b82f6;box-shadow:0 0 0 3px rgba(59,130,246,0.1);}
+.search-box i{position:absolute;left:0.7rem;top:50%;transform:translateY(-50%);color:var(--gray);font-size:0.8rem;}
+.notification-btn{position:relative;width:36px;height:36px;border:1px solid var(--gray-light);border-radius:8px;background:var(--white);color:var(--gray);cursor:pointer;display:flex;align-items:center;justify-content:center;transition:all 0.3s;}
+.notification-btn:hover{border-color:#3b82f6;color:#3b82f6;}
+.notification-badge{position:absolute;top:-3px;right:-3px;width:16px;height:16px;background:var(--danger);color:#fff;border-radius:50%;font-size:0.6rem;display:flex;align-items:center;justify-content:center;}
+
+/* Stats */
+.stats-grid{display:grid;grid-template-columns:repeat(4,1fr);gap:1.2rem;padding:1.5rem 2rem;}
+.stat-card{background:var(--white);border-radius:12px;padding:1.2rem;box-shadow:0 2px 8px rgba(0,0,0,0.05);transition:all 0.3s;border:1px solid transparent;}
+.stat-card:hover{transform:translateY(-3px);box-shadow:0 8px 20px rgba(59,130,246,0.15);border-color:rgba(59,130,246,0.2);}
+.stat-header{display:flex;justify-content:space-between;margin-bottom:0.8rem;}
+.stat-icon{width:40px;height:40px;border-radius:10px;display:flex;align-items:center;justify-content:center;font-size:1rem;}
+.stat-icon.green{background:linear-gradient(135deg,#dbeafe,#bfdbfe);color:#3b82f6;}.stat-icon.orange{background:linear-gradient(135deg,#cffafe,#a5f3fc);color:#06b6d4;}.stat-icon.blue{background:linear-gradient(135deg,#e0e7ff,#c7d2fe);color:#6366f1;}.stat-icon.red{background:linear-gradient(135deg,#fce7f3,#fbcfe8);color:#ec4899;}
+[data-theme="dark"] .stat-icon.green{background:linear-gradient(135deg,rgba(59,130,246,0.2),rgba(37,99,235,0.2));}[data-theme="dark"] .stat-icon.orange{background:linear-gradient(135deg,rgba(6,182,212,0.2),rgba(8,145,178,0.2));}[data-theme="dark"] .stat-icon.blue{background:linear-gradient(135deg,rgba(99,102,241,0.2),rgba(79,70,229,0.2));}[data-theme="dark"] .stat-icon.red{background:linear-gradient(135deg,rgba(236,72,153,0.2),rgba(219,39,119,0.2));}
+.stat-value{font-size:1.5rem;font-weight:700;background:linear-gradient(135deg,var(--dark),#3b82f6);-webkit-background-clip:text;-webkit-text-fill-color:transparent;}
+.stat-label{color:var(--gray);font-size:0.8rem;}
+
+/* Content */
+.content-section{padding:0 2rem 1.5rem;}.section-header{display:flex;justify-content:space-between;align-items:center;margin-bottom:1.2rem;}
+.section-header h2{font-size:1.1rem;}.btn{padding:0.5rem 1rem;border-radius:8px;font-family:'Poppins';font-size:0.8rem;font-weight:600;cursor:pointer;transition:all 0.3s;border:none;display:inline-flex;align-items:center;gap:0.4rem;}
+.btn-primary{background:linear-gradient(135deg,#3b82f6,#06b6d4);color:#fff;}.btn-primary:hover{background:linear-gradient(135deg,#2563eb,#0891b2);transform:translateY(-1px);box-shadow:0 4px 12px rgba(59,130,246,0.3);}
+.btn-outline{background:transparent;border:1px solid var(--gray-light);color:var(--dark);}.btn-outline:hover{border-color:#3b82f6;color:#3b82f6;}
+
+/* Tables */
+.table-container{background:var(--white);border-radius:12px;box-shadow:0 2px 8px rgba(0,0,0,0.05);overflow:hidden;transition:background 0.3s;}
+.data-table{width:100%;border-collapse:collapse;}.data-table th{background:linear-gradient(180deg,var(--light),rgba(59,130,246,0.05));padding:0.8rem 1.2rem;text-align:left;font-size:0.7rem;font-weight:600;color:var(--gray);text-transform:uppercase;transition:background 0.3s;}
+.data-table td{padding:0.8rem 1.2rem;border-bottom:1px solid var(--gray-light);font-size:0.8rem;transition:border-color 0.3s;}.data-table tr:hover{background:rgba(59,130,246,0.03);}
+.badge{padding:0.25rem 0.6rem;border-radius:20px;font-size:0.7rem;font-weight:600;}.badge-success{background:linear-gradient(135deg,#dbeafe,#bfdbfe);color:#2563eb;}.badge-warning{background:linear-gradient(135deg,#fef3c7,#fde68a);color:#d97706;}.badge-danger{background:linear-gradient(135deg,#fee2e2,#fecaca);color:#dc2626;}
+[data-theme="dark"] .badge-success{background:linear-gradient(135deg,rgba(37,99,235,0.2),rgba(29,78,216,0.2));color:#60a5fa;}[data-theme="dark"] .badge-warning{background:linear-gradient(135deg,rgba(217,119,6,0.2),rgba(180,83,9,0.2));color:#fbbf24;}[data-theme="dark"] .badge-danger{background:linear-gradient(135deg,rgba(220,38,38,0.2),rgba(185,28,28,0.2));color:#f87171;}
+.action-btns{display:flex;gap:0.4rem;}.action-btn{width:28px;height:28px;border-radius:6px;border:1px solid var(--gray-light);background:var(--white);color:var(--gray);cursor:pointer;display:flex;align-items:center;justify-content:center;font-size:0.75rem;transition:all 0.3s;}
+.action-btn:hover{border-color:#3b82f6;color:#3b82f6;box-shadow:0 2px 8px rgba(59,130,246,0.15);}
+
+/* POS */
+.pos-grid{display:grid;grid-template-columns:2fr 1fr;gap:1.2rem;padding:0 2rem 1.5rem;}
+.pos-products,.pos-cart{background:var(--white);border-radius:12px;padding:1.2rem;box-shadow:0 2px 8px rgba(0,0,0,0.05);transition:background 0.3s;}
+.pos-categories{display:flex;gap:0.5rem;margin-bottom:1rem;flex-wrap:wrap;}
+.category-btn{padding:0.4rem 0.8rem;border-radius:20px;border:1px solid var(--gray-light);background:var(--white);font-family:'Poppins';font-size:0.75rem;cursor:pointer;transition:all 0.3s;color:var(--dark);}
+.category-btn.active,.category-btn:hover{background:linear-gradient(135deg,#3b82f6,#06b6d4);color:#fff;border-color:transparent;box-shadow:0 4px 12px rgba(59,130,246,0.3);}
+.products-grid{display:grid;grid-template-columns:repeat(auto-fill,minmax(140px,1fr));gap:0.8rem;}
+.product-card{border:1px solid var(--gray-light);border-radius:10px;padding:0.8rem;text-align:center;cursor:pointer;transition:all 0.3s;background:var(--white);position:relative;overflow:hidden;}
+.product-card::before{content:'';position:absolute;top:0;left:0;width:100%;height:3px;background:linear-gradient(90deg,#3b82f6,#06b6d4);transform:scaleX(0);transition:transform 0.3s;}
+.product-card:hover::before{transform:scaleX(1);}
+.product-card:hover{border-color:rgba(59,130,246,0.3);transform:translateY(-2px);box-shadow:0 4px 12px rgba(59,130,246,0.15);}
+.product-card .emoji{font-size:2.5rem;margin-bottom:0.3rem;}.product-card h4{font-size:0.8rem;color:var(--dark);}.product-card .cat{color:var(--gray);font-size:0.7rem;}.product-card .price{color:#3b82f6;font-weight:700;}
+
+.pos-cart{position:sticky;top:80px;max-height:calc(100vh-120px);display:flex;flex-direction:column;}
+.cart-header{display:flex;justify-content:space-between;align-items:center;margin-bottom:1rem;padding-bottom:0.8rem;border-bottom:1px solid var(--gray-light);}
+.cart-items{flex:1;overflow-y:auto;}.cart-item{display:flex;align-items:center;gap:0.6rem;padding:0.6rem 0;border-bottom:1px solid var(--gray-light);}
+.cart-item .emoji{font-size:1.5rem;}.cart-item-info{flex:1;}.cart-item-info h4{font-size:0.8rem;color:var(--dark);}.cart-item-info p{font-size:0.7rem;color:var(--gray);}
+.qty-control{display:flex;align-items:center;gap:0.3rem;}.qty-btn{width:24px;height:24px;border-radius:5px;border:1px solid var(--gray-light);background:var(--white);cursor:pointer;display:flex;align-items:center;justify-content:center;font-size:0.8rem;color:var(--dark);transition:all 0.3s;}
+.qty-btn:hover{background:linear-gradient(135deg,#3b82f6,#06b6d4);color:#fff;border-color:transparent;}.qty-value{font-weight:600;font-size:0.8rem;min-width:20px;text-align:center;color:var(--dark);}
+.cart-summary{border-top:2px solid var(--gray-light);padding-top:0.8rem;margin-top:auto;}.summary-row{display:flex;justify-content:space-between;margin-bottom:0.5rem;font-size:0.8rem;color:var(--dark);}
+.summary-row.total{font-size:1rem;font-weight:700;border-top:1px solid var(--gray-light);padding-top:0.5rem;margin-top:0.5rem;background:linear-gradient(135deg,var(--dark),#3b82f6);-webkit-background-clip:text;-webkit-text-fill-color:transparent;}
+.btn-checkout{width:100%;padding:0.8rem;background:linear-gradient(135deg,#3b82f6,#06b6d4);color:#fff;border:none;border-radius:10px;font-family:'Poppins';font-size:0.9rem;font-weight:600;cursor:pointer;margin-top:0.8rem;transition:all 0.3s;position:relative;overflow:hidden;}
+.btn-checkout::before{content:'';position:absolute;top:0;left:-100%;width:100%;height:100%;background:linear-gradient(90deg,transparent,rgba(255,255,255,0.2),transparent);transition:0.5s;}
+.btn-checkout:hover::before{left:100%;}
+.btn-checkout:hover{transform:translateY(-2px);box-shadow:0 4px 12px rgba(59,130,246,0.4);}
+
+/* Modal */
+.modal-overlay{display:none;position:fixed;top:0;left:0;right:0;bottom:0;background:rgba(0,0,0,0.5);z-index:1000;align-items:center;justify-content:center;backdrop-filter:blur(4px);}
+.modal-overlay.active{display:flex;}.modal{background:var(--white);border-radius:16px;padding:1.5rem;width:90%;max-width:450px;box-shadow:0 20px 40px rgba(0,0,0,0.2);animation:modalIn 0.3s ease;transition:background 0.3s;}
+@keyframes modalIn{from{opacity:0;transform:scale(0.95);}to{opacity:1;transform:scale(1);}}
+.modal-header{display:flex;justify-content:space-between;align-items:center;margin-bottom:1.2rem;}.modal-header h2{font-size:1.1rem;color:var(--dark);}
+.modal-close{width:32px;height:32px;border-radius:8px;border:1px solid var(--gray-light);background:var(--white);cursor:pointer;display:flex;align-items:center;justify-content:center;transition:all 0.3s;color:var(--dark);}
+.modal-close:hover{background:linear-gradient(135deg,#fee2e2,#fecaca);color:var(--danger);border-color:var(--danger);}
+.modal-form .form-group{margin-bottom:0.8rem;}.modal-form label{display:block;font-size:0.8rem;font-weight:500;margin-bottom:0.3rem;color:var(--dark);}
+.modal-form input,.modal-form select{width:100%;padding:0.6rem 0.8rem;border:1px solid var(--gray-light);border-radius:8px;font-family:'Poppins';font-size:0.8rem;background:var(--white);color:var(--dark);transition:all 0.3s;}
+.modal-form input:focus,.modal-form select:focus{outline:none;border-color:#3b82f6;box-shadow:0 0 0 3px rgba(59,130,246,0.1);}
+.modal-actions{display:flex;gap:0.6rem;margin-top:1rem;}.modal-actions .btn{flex:1;justify-content:center;}
+
+/* Toast */
+.toast-container{position:fixed;top:15px;right:15px;z-index:2000;display:flex;flex-direction:column;gap:0.5rem;}
+.toast{background:var(--white);border-radius:10px;padding:0.8rem 1.2rem;box-shadow:0 8px 20px rgba(0,0,0,0.15);display:flex;align-items:center;gap:0.6rem;min-width:280px;animation:toastIn 0.3s ease;border-left:3px solid #3b82f6;transition:background 0.3s;}
+.toast.success{border-left-color:#3b82f6;}.toast.error{border-left-color:var(--danger);}.toast.warning{border-left-color:var(--warning);}
+@keyframes toastIn{from{opacity:0;transform:translateX(100%);}to{opacity:1;transform:translateX(0);}}
+.toast i{font-size:1rem;}.toast.success i{color:#3b82f6;}.toast.error i{color:var(--danger);}.toast.warning i{color:var(--warning);}
+.toast-content h4{font-size:0.8rem;color:var(--dark);}.toast-content p{font-size:0.7rem;color:var(--gray);}
+
+.page-section{display:none;}.page-section.active{display:block;}
+@media(max-width:1024px){.stats-grid{grid-template-columns:repeat(2,1fr);}.pos-grid{grid-template-columns:1fr;}}
+@media(max-width:768px){
+  .sidebar{transform:translateX(-100%);width:280px;transition:transform 0.3s ease;position:fixed;z-index:200;}
+  .sidebar.open{transform:translateX(0);}
+  .main-content{margin-left:0;}
+  .stats-grid{grid-template-columns:1fr;padding:1rem;gap:0.8rem;}
+  .content-section,.pos-grid{padding:0 1rem 1rem;}
+  .top-bar{padding:0.75rem 1rem;flex-wrap:wrap;gap:0.5rem;}
+  /* Reports page responsive fixes */
+  #page-reports .stats-grid{grid-template-columns:repeat(2,1fr) !important;}
+  #page-reports > .content-section > div[style*="grid-template-columns:1fr 1fr"]{grid-template-columns:1fr !important;}
+  #page-reports .table-container{overflow-x:auto;}
+  #page-reports .report-chart-bar{min-width:60px;}
+  #page-reports .report-detail-item{flex-wrap:wrap;gap:0.3rem;}
+  #page-reports .report-detail-value{font-size:0.8rem;}
+  #page-reports h3{font-size:0.9rem !important;}
+  #page-reports .section-header{flex-direction:column;align-items:flex-start;gap:0.5rem;}
+  .page-title h1{font-size:1rem;}
+  .page-title p{font-size:0.7rem;}
+  .search-box input{width:140px;font-size:0.75rem;}
+  .realtime-clock{padding:0.4rem 0.6rem;}
+  .clock-time{font-size:0.75rem;}
+  .clock-date{font-size:0.6rem;}
+  .pos-grid{grid-template-columns:1fr;}
+  .products-grid{grid-template-columns:repeat(2,1fr);gap:0.6rem;}
+  .product-card{padding:0.6rem;}
+  .product-card .emoji{font-size:2rem;}
+  .pos-cart{position:static;max-height:none;}
+  .cart-items{max-height:300px;}
+  .data-table{display:block;overflow-x:auto;white-space:nowrap;}
+  .data-table th,.data-table td{padding:0.6rem 0.8rem;font-size:0.75rem;}
+  .modal{width:95%;padding:1rem;}
+  .login-container{margin:1rem;padding:1.5rem;}
+  .login-logo h1{font-size:1.2rem;}
+  .form-options{flex-direction:column;gap:0.5rem;align-items:flex-start;}
+  .btn-login{padding:0.8rem;}
+  .notification-dropdown{width:280px;right:-20px;}
+  .search-results{width:260px;}
+  .stats-grid .stat-card{padding:1rem;}
+  .stat-value{font-size:1.2rem;}
+  .section-header{flex-direction:column;gap:0.5rem;align-items:flex-start;}
+  .sales-filter{padding:0.4rem 0.6rem;font-size:0.7rem;}
+  .modal-form input,.modal-form select{padding:0.5rem 0.6rem;}
+  .qty-btn{width:28px;height:28px;}
+  .cart-item{gap:0.4rem;}
+  .cart-item .emoji{font-size:1.2rem;}
+}
+@media(max-width:480px){
+  .products-grid{grid-template-columns:repeat(2,1fr);}
+  /* Reports page extra small screen fixes */
+  #page-reports .stats-grid{grid-template-columns:1fr !important;}
+  #page-reports .report-detail-item{padding:0.5rem 0;}
+  #page-reports .report-detail-label{font-size:0.75rem;}
+  #page-reports .report-detail-value{font-size:0.8rem;}
+  #page-reports .table-container{padding:1rem !important;}
+  #page-reports div[style*="height:140px"]{height:100px !important;}
+  #page-reports div[style*="height:8px"]{height:6px !important;}
+  #page-reports div[style*="grid-template-columns:repeat(12,1fr)"]{grid-template-columns:repeat(6,1fr) !important;gap:0.2rem !important;}
+  #page-reports div[style*="grid-template-columns:repeat(12,1fr)"] > div{padding:0.4rem 0.1rem !important;font-size:0.55rem !important;}
+  #page-reports div[style*="grid-template-columns:repeat(12,1fr)"] strong{font-size:0.6rem !important;}
+  .product-card .emoji{font-size:1.8rem;}
+  .product-card h4{font-size:0.7rem;}
+  .product-card .price{font-size:0.8rem;}
+  .stat-value{font-size:1.1rem;}
+  .data-table th,.data-table td{padding:0.5rem 0.6rem;font-size:0.7rem;}
+  .action-btn{width:24px;height:24px;}
+  .login-container{padding:1.2rem;}
+  .login-logo .logo-icon{font-size:2rem;}
+  .form-group{margin-bottom:1rem;}
+  .input-wrapper input{padding:0.7rem 1rem 0.7rem 2.2rem;}
+}
+
+/* Login Dark Mode */
+.login-theme-toggle{position:fixed;top:1.5rem;right:1.5rem;width:40px;height:40px;border-radius:50%;background:rgba(255,255,255,0.1);border:1px solid rgba(255,255,255,0.2);color:#fff;cursor:pointer;display:flex;align-items:center;justify-content:center;transition:all 0.3s;z-index:10;backdrop-filter:blur(10px);}
+.login-theme-toggle:hover{background:rgba(255,255,255,0.2);transform:scale(1.1);}
+[data-login-theme="dark"] .login-page{background:linear-gradient(135deg,#020617,#0f172a,#1e3a8a);}
+[data-login-theme="dark"] .login-container{background:rgba(15,23,42,0.7);border-color:rgba(59,130,246,0.2);}
+[data-login-theme="dark"] .login-logo h1{color:#e2e8f0;}
+[data-login-theme="dark"] .login-logo p{color:#64748b;}
+[data-login-theme="dark"] .form-group label{color:#94a3b8;}
+[data-login-theme="dark"] .input-wrapper input{background:rgba(30,41,59,0.6);border-color:rgba(59,130,246,0.2);color:#e2e8f0;}
+[data-login-theme="dark"] .input-wrapper input::placeholder{color:#475569;}
+[data-login-theme="dark"] .input-wrapper input:focus{background:rgba(30,41,59,0.8);border-color:#3b82f6;box-shadow:0 0 0 3px rgba(59,130,246,0.2);}
+[data-login-theme="dark"] .input-wrapper i{color:#64748b;}
+[data-login-theme="dark"] #togglePassword{color:#64748b;}
+
+[data-login-theme="dark"] .input-wrapper .fa-lock{color:#64748b;}
+[data-login-theme="dark"] .form-options{color:#64748b;}
+[data-login-theme="dark"] .remember-me input{accent-color:#3b82f6;}
+[data-login-theme="dark"] .forgot-password{color:#60a5fa;}
+[data-login-theme="dark"] #showPasswordLink{color:#60a5fa;}
+[data-login-theme="dark"] .demo-credentials{background:rgba(59,130,246,0.1);border-color:rgba(59,130,246,0.2);color:#60a5fa;}
+[data-login-theme="dark"] .demo-credentials code{color:#93c5fd;}
+
+/* Animated Login */
+@keyframes float{0%,100%{transform:translateY(0);}50%{transform:translateY(-10px);}}
+@keyframes pulse-glow{0%,100%{box-shadow:0 0 20px rgba(59,130,246,0.3);}50%{box-shadow:0 0 40px rgba(59,130,246,0.6);}}
+@keyframes slide-up{from{opacity:0;transform:translateY(30px);}to{opacity:1;transform:translateY(0);}}
+@keyframes fade-in{from{opacity:0;}to{opacity:1;}}
+@keyframes shimmer{0%{background-position:-200% center;}100%{background-position:200% center;}}
+@keyframes typewriter{from{width:0;}to{width:100%;}}
+@keyframes blink{0%,100%{border-color:transparent;}50%{border-color:#3b82f6;}}
+@keyframes particle-float{0%{transform:translateY(100vh) scale(0);opacity:0;}10%{opacity:1;}90%{opacity:1;}100%{transform:translateY(-10vh) scale(1);opacity:0;}}
+@keyframes rotate-slow{from{transform:rotate(0deg);}to{transform:rotate(360deg);}}
+
+.particles{position:fixed;top:0;left:0;width:100%;height:100%;overflow:hidden;pointer-events:none;z-index:0;}
+.particle{position:absolute;width:6px;height:6px;background:rgba(59,130,246,0.4);border-radius:50%;animation:particle-float linear infinite;}
+.particle:nth-child(1){left:10%;animation-duration:12s;animation-delay:0s;width:4px;height:4px;}
+.particle:nth-child(2){left:20%;animation-duration:15s;animation-delay:2s;width:8px;height:8px;background:rgba(6,182,212,0.3);}
+.particle:nth-child(3){left:30%;animation-duration:10s;animation-delay:4s;width:5px;height:5px;background:rgba(139,92,246,0.3);}
+.particle:nth-child(4){left:40%;animation-duration:18s;animation-delay:1s;width:3px;height:3px;}
+.particle:nth-child(5){left:50%;animation-duration:14s;animation-delay:3s;width:7px;height:7px;background:rgba(6,182,212,0.4);}
+.particle:nth-child(6){left:60%;animation-duration:11s;animation-delay:5s;width:4px;height:4px;}
+.particle:nth-child(7){left:70%;animation-duration:16s;animation-delay:2s;width:6px;height:6px;background:rgba(139,92,246,0.4);}
+.particle:nth-child(8){left:80%;animation-duration:13s;animation-delay:4s;width:5px;height:5px;}
+.particle:nth-child(9){left:90%;animation-duration:17s;animation-delay:1s;width:4px;height:4px;background:rgba(6,182,212,0.3);}
+.particle:nth-child(10){left:15%;animation-duration:19s;animation-delay:6s;width:3px;height:3px;}
+
+.login-logo .logo-icon{font-size:2.5rem;background:linear-gradient(135deg,#3b82f6,#06b6d4,#8b5cf6);-webkit-background-clip:text;-webkit-text-fill-color:transparent;animation:float 3s ease-in-out infinite;margin-bottom:0.5rem;display:inline-block;}
+.login-logo .logo-icon::after{content:'';position:absolute;width:60px;height:60px;background:radial-gradient(circle,rgba(59,130,246,0.3),transparent 70%);border-radius:50%;top:50%;left:50%;transform:translate(-50%,-50%);animation:pulse-glow 2s ease-in-out infinite;z-index:-1;}
+
+.typewriter{display:inline-block;overflow:hidden;white-space:nowrap;border-right:3px solid #3b82f6;animation:typewriter 2s steps(13) forwards,blink 0.8s step-end infinite;max-width:fit-content;margin:0 auto;}
+
+.fade-in-delay{opacity:0;animation:fade-in 1s ease 2.5s forwards;}
+
+.login-container{animation:slide-up 0.8s ease-out;}
+
+.input-wrapper input{transition:all 0.4s cubic-bezier(0.4,0,0.2,1);}
+.input-wrapper input:focus{transform:scale(1.02);}
+
+.btn-login{position:relative;overflow:hidden;background-size:200% auto;animation:shimmer 3s linear infinite;}
+.btn-login::after{content:'';position:absolute;top:-50%;left:-50%;width:200%;height:200%;background:linear-gradient(45deg,transparent,rgba(255,255,255,0.1),transparent);transform:rotate(45deg);transition:all 0.5s;}
+.btn-login:hover::after{left:100%;}
+.btn-login:active{transform:scale(0.98);}
+
+/* Shake animation for error */
+@keyframes shake{0%,100%{transform:translateX(0);}10%,30%,50%,70%,90%{transform:translateX(-5px);}20%,40%,60%,80%{transform:translateX(5px);}}
+.shake{animation:shake 0.5s ease-in-out;}
+
+/* Success check animation */
+@keyframes check-pop{0%{transform:scale(0) rotate(-45deg);}50%{transform:scale(1.2) rotate(0);}100%{transform:scale(1) rotate(0);}}
+.check-pop{animation:check-pop 0.5s ease-out;}
+
+/* Notification Dropdown */
+.notification-dropdown{display:none;position:absolute;top:calc(100% + 10px);right:0;width:320px;background:var(--white);border-radius:12px;box-shadow:0 10px 40px rgba(0,0,0,0.15);z-index:9999;overflow:hidden;border:1px solid var(--gray-light);animation:dropdownIn 0.3s ease;transform-origin:top right;}
+.notification-dropdown.active{display:block;}
+@keyframes dropdownIn{from{opacity:0;transform:translateY(-10px);}to{opacity:1;transform:translateY(0);}}
+.notif-header{display:flex;justify-content:space-between;align-items:center;padding:1rem 1.2rem;border-bottom:1px solid var(--gray-light);background:linear-gradient(135deg,rgba(59,130,246,0.05),rgba(6,182,212,0.05));}
+.notif-header h4{font-size:0.9rem;margin:0;}.notif-count{font-size:0.75rem;color:#3b82f6;font-weight:600;background:rgba(59,130,246,0.1);padding:0.2rem 0.5rem;border-radius:10px;}
+.notif-list{max-height:300px;overflow-y:auto;}.notif-item{display:flex;align-items:flex-start;gap:0.75rem;padding:0.875rem 1.2rem;border-bottom:1px solid var(--gray-light);cursor:pointer;transition:all 0.3s;position:relative;}
+.notif-item:hover{background:rgba(59,130,246,0.03);}.notif-item.unread{background:rgba(59,130,246,0.03);}
+.notif-item.unread::before{content:'';position:absolute;left:0;top:50%;transform:translateY(-50%);width:3px;height:60%;background:linear-gradient(180deg,#3b82f6,#06b6d4);border-radius:0 3px 3px 0;}
+.notif-icon{width:36px;height:36px;border-radius:10px;display:flex;align-items:center;justify-content:center;font-size:0.875rem;flex-shrink:0;}
+.notif-content{flex:1;}.notif-title{font-size:0.8rem;font-weight:600;color:var(--dark);margin-bottom:0.2rem;}.notif-desc{font-size:0.75rem;color:var(--gray);margin-bottom:0.2rem;}.notif-time{font-size:0.7rem;color:var(--gray);}
+.notif-footer{padding:0.75rem 1.2rem;text-align:center;border-top:1px solid var(--gray-light);}.notif-footer a{color:#3b82f6;font-size:0.8rem;text-decoration:none;font-weight:500;}.notif-footer a:hover{text-decoration:underline;}
+
+/* Real-time Clock */
+.realtime-clock{display:flex;align-items:center;gap:0.5rem;padding:0.5rem 1rem;background:linear-gradient(135deg,rgba(59,130,246,0.1),rgba(6,182,212,0.1));border-radius:10px;border:1px solid rgba(59,130,246,0.2);font-family:'Poppins',sans-serif;}
+.realtime-clock i{color:#3b82f6;font-size:0.875rem;}
+.clock-time{font-size:0.875rem;font-weight:600;color:var(--dark);letter-spacing:0.5px;}
+.clock-date{font-size:0.7rem;color:var(--gray);margin-top:-2px;}
+.clock-divider{width:1px;height:20px;background:var(--gray-light);margin:0 0.25rem;}
+
+/* Search Results Dropdown */
+.search-wrapper{position:relative;}
+.search-results{display:none;position:absolute;top:calc(100% + 8px);left:0;width:280px;background:var(--white);border-radius:12px;box-shadow:0 10px 40px rgba(0,0,0,0.15);z-index:9999;overflow:hidden;border:1px solid var(--gray-light);max-height:350px;overflow-y:auto;}
+.search-results.active{display:block;animation:dropdownIn 0.2s ease;}
+.search-result-item{display:flex;align-items:center;gap:0.6rem;padding:0.7rem 1rem;border-bottom:1px solid var(--gray-light);cursor:pointer;transition:all 0.2s;}
+.search-result-item:hover{background:rgba(59,130,246,0.05);}
+.search-result-item .emoji{font-size:1.3rem;}
+.search-result-item .info{flex:1;}.search-result-item .info h4{font-size:0.8rem;font-weight:600;color:var(--dark);}.search-result-item .info p{font-size:0.7rem;color:var(--gray);}
+.search-result-item .price{font-size:0.8rem;font-weight:700;color:#3b82f6;}
+.search-no-results{padding:1.5rem;text-align:center;color:var(--gray);font-size:0.8rem;}
+.search-no-results i{font-size:1.5rem;margin-bottom:0.5rem;display:block;}
+.search-header{padding:0.6rem 1rem;background:var(--light);border-bottom:1px solid var(--gray-light);font-size:0.7rem;color:var(--gray);font-weight:500;}
+
+/* Sales Filter Buttons */
+.sales-filter.active{background:linear-gradient(135deg,#3b82f6,#06b6d4);color:#fff;border-color:transparent;}
+
+/* Delete Modal */
+#deleteModal .modal{max-width:350px;}
+#confirmDelete:hover{background:#dc2626 !important;transform:translateY(-2px);box-shadow:0 4px 12px rgba(239,68,68,0.3);}
+
+/* Product Table Text Visibility - FORCE COLORS */
+.data-table td{color:var(--dark) !important;}
+.data-table td h4{color:var(--dark) !important;font-weight:700 !important;font-size:0.9rem !important;}
+.data-table td p{color:var(--gray) !important;font-size:0.75rem !important;}
+.data-table td strong{color:#3b82f6 !important;}
+.data-table td div[style*="display:flex"] h4{color:var(--dark) !important;}
+.product-card h4{color:var(--dark) !important;}
+.product-card .cat{color:var(--gray) !important;}
+.cart-item-info h4{color:var(--dark) !important;}
+.cart-item-info p{color:var(--gray) !important;}
+.summary-row{color:var(--dark) !important;}
+.modal-header h2{color:var(--dark) !important;}
+.modal-form label{color:var(--dark) !important;}
+.toast-content h4{color:var(--dark) !important;}
+.notif-title{color:var(--dark) !important;}
+.notif-desc{color:var(--gray) !important;}
+
+/* Report Cards */
+.report-card{transition:all 0.3s;}
+.report-row{display:grid;grid-template-columns:1fr 1fr;gap:1.2rem;margin-bottom:1.5rem;}
+@media(max-width:768px){
+  .report-row{grid-template-columns:1fr !important;gap:0.8rem !important;margin-bottom:1rem !important;}
+}
+.report-card:hover{transform:translateY(-4px);box-shadow:0 12px 24px rgba(59,130,246,0.15);border-color:rgba(59,130,246,0.3);}
+.report-detail-item{display:flex;justify-content:space-between;align-items:center;padding:0.75rem 0;border-bottom:1px solid var(--gray-light);}
+.report-detail-item:last-child{border-bottom:none;}
+.report-detail-label{color:var(--gray);font-size:0.85rem;}
+.report-detail-value{font-weight:700;color:var(--dark);font-size:0.9rem;}
+.report-chart-bar{height:8px;background:linear-gradient(90deg,#3b82f6,#06b6d4);border-radius:4px;margin-top:0.5rem;transition:width 0.5s ease;}
+</style>
+<base target="_blank">
+<base target="_blank">
+<base target="_blank">
+<base target="_blank">
+<base target="_blank">
+<base target="_blank">
+<base target="_blank">
+<base target="_blank">
+<base target="_blank">
+<base target="_blank">
+</head>
+<body>
+
+<!-- LOGIN -->
+<div class="login-page" id="loginPage">
+<!-- Animated Background Particles -->
+<div class="particles" id="particles"></div>
+<div class="login-theme-toggle" id="loginThemeToggle" title="Toggle Dark Mode"><i class="fas fa-moon"></i></div>
+<div class="login-container">
+<div class="login-logo">
+<i class="fas fa-store logo-icon"></i>
+<h1 class="typewriter">FreshMart POS</h1>
+<p class="fade-in-delay">Grocery Store Management</p>
+</div>
+<form id="loginForm">
+<div class="form-group"><label>Username</label><div class="input-wrapper"><i class="fas fa-user" style="position:absolute;left:1rem;top:50%;transform:translateY(-50%);color:rgba(255,255,255,0.7);font-size:0.9rem;z-index:5;"></i><input type="text" id="username" placeholder="Enter username" required style="padding:0.8rem 2.8rem 0.8rem 2.8rem;"></div></div>
+<div class="form-group">
+  <label>Password</label>
+  <div class="input-wrapper">
+    <i class="fas fa-lock"></i>
+    <input type="password" id="password" placeholder="Enter password" required>
+    <i class="fas fa-eye toggle-password" id="togglePassword" style="position:absolute; right:1rem; left:auto; top:50%; transform:translateY(-50%); color:rgba(255,255,255,0.5); cursor:pointer; z-index:10;"></i>
+  </div>
+</div>
+<div class="form-options"><label class="remember-me"><input type="checkbox"> Remember me</label><a href="#" class="forgot-password">Forgot password?</a></div>
+<button type="submit" class="btn-login" id="loginBtn"><i class="fas fa-sign-in-alt"></i> Sign In</button>
+</form>
+<div class="demo-credentials"><p>Demo: <code>admin / admin123</code> or <code>cashier / cashier123</code></p></div>
+</div>
+</div>
+
+<!-- DASHBOARD -->
+<div class="dashboard" id="dashboard">
+<div id="sidebarOverlay" style="display:none;position:fixed;top:0;left:0;right:0;bottom:0;background:rgba(0,0,0,0.5);z-index:150;backdrop-filter:blur(2px);"></div>
+<aside class="sidebar" id="sidebar">
+<div class="sidebar-header"><i class="fas fa-store"></i><h2>FreshMart</h2></div>
+<ul class="nav-menu">
+<li class="nav-item" data-role="admin" style="display:none;"><a class="nav-link active" data-page="dashboard"><i class="fas fa-chart-pie"></i><span>Dashboard</span></a></li>
+<li class="nav-item"><a class="nav-link" data-page="pos"><i class="fas fa-cash-register"></i><span>Sell</span></a></li>
+<li class="nav-item"><a class="nav-link" data-page="products"><i class="fas fa-boxes"></i><span>Products</span></a></li>
+<li class="nav-item"><a class="nav-link" data-page="inventory"><i class="fas fa-warehouse"></i><span>Inventory</span></a></li>
+<li class="nav-item"><a class="nav-link" data-page="sales"><i class="fas fa-receipt"></i><span>Sales</span></a></li>
+<li class="nav-item" data-role="admin" style="display:none;"><a class="nav-link" data-page="reports"><i class="fas fa-chart-bar"></i><span>Reports</span></a></li>
+<li class="nav-item" data-role="admin" style="display:none;"><a class="nav-link" data-page="settings"><i class="fas fa-cog"></i><span>Settings</span></a></li>
+</ul>
+<div class="sidebar-footer"><div class="user-profile"><div class="user-avatar" id="userAvatar">A</div><div class="user-info"><h4 id="userName">Admin</h4><p id="userRole">Manager</p></div></div></div>
+</aside>
+
+<main class="main-content">
+<div class="top-bar">
+<div style="display:flex;align-items:center;gap:0.75rem;">
+<button id="mobileMenuBtn" style="display:none;width:36px;height:36px;border:1px solid var(--gray-light);border-radius:8px;background:var(--white);color:var(--dark);cursor:pointer;align-items:center;justify-content:center;font-size:1rem;"><i class="fas fa-bars"></i></button>
+<div class="page-title"><h1 id="pageTitle">Dashboard</h1><p id="pageSubtitle">Welcome back!</p></div>
+</div>
+<div class="realtime-clock" id="realtimeClock">
+<i class="fas fa-clock"></i>
+<div>
+<div class="clock-time" id="clockTime">12:00:00</div>
+<div class="clock-date" id="clockDate">May 26, 2026</div>
+</div>
+</div>
+<div class="top-bar-actions" style="display:flex;align-items:center;gap:0.75rem;position:relative;">
+<div class="search-wrapper">
+<div class="search-box"><i class="fas fa-search"></i><input type="text" id="searchInput" placeholder="Search products..." autocomplete="off"></div>
+<div class="search-results" id="searchResults"></div>
+</div>
+<div class="notification-wrapper" style="position:relative;display:inline-block;">
+<button class="notification-btn" id="notificationBtn"><i class="fas fa-bell"></i><span class="notification-badge" id="notifBadge">3</span></button>
+<div class="notification-dropdown" id="notificationDropdown">
+<div class="notif-header"><h4>Notifications</h4><span class="notif-count">3 new</span></div>
+<div class="notif-list">
+<div class="notif-item unread" onclick="markRead(this)">
+<div class="notif-icon" style="background:linear-gradient(135deg,#dbeafe,#bfdbfe);color:#3b82f6;"><i class="fas fa-box"></i></div>
+<div class="notif-content"><p class="notif-title">Low Stock Alert</p><p class="notif-desc">Apples stock is below 50 units</p><span class="notif-time">2 mins ago</span></div>
+</div>
+<div class="notif-item unread" onclick="markRead(this)">
+<div class="notif-icon" style="background:linear-gradient(135deg,#fef3c7,#fde68a);color:#d97706;"><i class="fas fa-shopping-cart"></i></div>
+<div class="notif-content"><p class="notif-title">New Order</p><p class="notif-desc">Order #ORD-006 received</p><span class="notif-time">15 mins ago</span></div>
+</div>
+<div class="notif-item unread" onclick="markRead(this)">
+<div class="notif-icon" style="background:linear-gradient(135deg,#dcfce7,#bbf7d0);color:#16a34a;"><i class="fas fa-check-circle"></i></div>
+<div class="notif-content"><p class="notif-title">Payment Received</p><p class="notif-desc">₱2,340 from Juan Dela Cruz</p><span class="notif-time">1 hour ago</span></div>
+</div>
+</div>
+<div class="notif-footer"><a href="#" onclick="markAllRead()">Mark all as read</a></div>
+</div>
+</div>
+<button class="theme-toggle" id="themeToggle" title="Toggle Dark Mode"><i class="fas fa-moon"></i></button>
+<button class="notification-btn" id="logoutBtn" title="Logout"><i class="fas fa-sign-out-alt"></i></button>
+</div>
+</div>
+
+<!-- Dashboard Page -->
+<div class="page-section active" id="page-dashboard">
+<div class="stats-grid">
+<div class="stat-card"><div class="stat-header"><div class="stat-icon green"><i class="fas fa-peso-sign"></i></div><span class="badge badge-success">+12%</span></div><div class="stat-value">₱12,450</div><div class="stat-label">Today's Sales</div></div>
+<div class="stat-card"><div class="stat-header"><div class="stat-icon orange"><i class="fas fa-shopping-cart"></i></div><span class="badge badge-success">+8%</span></div><div class="stat-value">48</div><div class="stat-label">Orders Today</div></div>
+<div class="stat-card"><div class="stat-header"><div class="stat-icon blue"><i class="fas fa-box"></i></div><span class="badge badge-warning">-3%</span></div><div class="stat-value">1,247</div><div class="stat-label">Total Products</div></div>
+<div class="stat-card"><div class="stat-header"><div class="stat-icon red"><i class="fas fa-exclamation-triangle"></i></div><span class="badge badge-danger">+2</span></div><div class="stat-value">18</div><div class="stat-label">Low Stock</div></div>
+</div>
+<div class="content-section">
+<div class="section-header"><h2>Recent Orders</h2><button class="btn btn-outline" id="viewAllOrders" onclick="goToPage('sales')">View All</button></div>
+<div class="table-container">
+<table class="data-table">
+<thead><tr><th>Order ID</th><th>Customer</th><th>Items</th><th>Total</th><th>Status</th><th>Actions</th></tr></thead>
+<tbody id="dashboardOrdersTable">
+<tr><td><strong>#ORD-001</strong></td><td>Juan Dela Cruz</td><td>5 items</td><td><strong>₱1,250</strong></td><td><span class="badge badge-success">Done</span></td><td><div class="action-btns"><button class="action-btn" onclick="printOrder(1)" title="Print Order"><i class="fas fa-print"></i></button></div></td></tr>
+<tr><td><strong>#ORD-002</strong></td><td>Maria Santos</td><td>3 items</td><td><strong>₱890</strong></td><td><span class="badge badge-warning">Processing</span></td><td><div class="action-btns"><button class="action-btn" onclick="printOrder(2)" title="Print Order"><i class="fas fa-print"></i></button></div></td></tr>
+<tr><td><strong>#ORD-003</strong></td><td>Pedro Reyes</td><td>8 items</td><td><strong>₱2,340</strong></td><td><span class="badge badge-success">Done</span></td><td><div class="action-btns"><button class="action-btn" onclick="printOrder(3)" title="Print Order"><i class="fas fa-print"></i></button></div></td></tr>
+</tbody>
+</table>
+</div>
+</div>
+</div>
+
+<!-- POS Page -->
+<div class="page-section" id="page-pos">
+<div class="pos-grid">
+<div class="pos-products">
+<div class="pos-categories">
+<button class="category-btn active" data-cat="all">All</button>
+<button class="category-btn" data-cat="Fruits">Fruits</button>
+<button class="category-btn" data-cat="Vegetables">Veggies</button>
+<button class="category-btn" data-cat="Meat">Meat</button>
+<button class="category-btn" data-cat="Dairy">Dairy</button>
+<button class="category-btn" data-cat="Beverages">Drinks</button>
+<button class="category-btn" data-cat="Snacks">Snacks</button>
+</div>
+<div class="products-grid" id="posProducts"></div>
+</div>
+<div class="pos-cart">
+<div class="cart-header"><h3>Current Order</h3><button class="action-btn" id="clearCart"><i class="fas fa-trash"></i></button></div>
+<div class="cart-items" id="cartItems"><div style="text-align:center;padding:2rem;color:var(--gray)"><i class="fas fa-shopping-cart" style="font-size:2rem"></i><p>Cart is empty</p></div></div>
+<div class="cart-summary">
+<div class="summary-row"><span>Subtotal</span><span id="subtotal">₱0.00</span></div>
+<div class="summary-row"><span>Tax (12%)</span><span id="tax">₱0.00</span></div>
+<div class="summary-row total"><span>Total</span><span id="total">₱0.00</span></div>
+<button class="btn-checkout" id="checkoutBtn"><i class="fas fa-credit-card"></i> Pay Now</button>
+</div>
+</div>
+</div>
+</div>
+
+<!-- Products Page -->
+<div class="page-section" id="page-products">
+<div class="content-section">
+<div class="section-header"><h2>All Products</h2><button class="btn btn-primary" id="addProductBtn"><i class="fas fa-plus"></i> Add Product</button></div>
+<div class="table-container"><table class="data-table"><thead><tr><th>Product</th><th>Category</th><th>Price</th><th>Stock</th><th>Status</th><th>Actions</th></tr></thead><tbody id="productsTable"></tbody></table></div>
+</div>
+</div>
+
+<!-- Inventory Page -->
+<div class="page-section" id="page-inventory">
+<div class="content-section">
+<div class="section-header"><h2>Inventory</h2><button class="btn btn-primary" id="exportInventory" onclick="exportInventory()"><i class="fas fa-file-export"></i> Export CSV</button></div>
+<div class="table-container"><table class="data-table"><thead><tr><th>Product</th><th>Stock</th><th>Min Stock</th><th>Status</th><th>Actions</th></tr></thead><tbody id="inventoryTable"></tbody></table></div>
+</div>
+</div>
+
+<!-- Sales Page -->
+<div class="page-section" id="page-sales">
+<div class="content-section">
+<div class="section-header"><h2>Sales History</h2><div style="display:flex;gap:0.5rem;"><button class="btn btn-outline sales-filter active" data-filter="today">Today</button><button class="btn btn-outline sales-filter" data-filter="week">Week</button><button class="btn btn-outline sales-filter" data-filter="month">Month</button></div></div>
+<div class="table-container"><table class="data-table"><thead><tr><th>Receipt</th><th>Date</th><th>Cashier</th><th>Items</th><th>Total</th><th>Payment</th></tr></thead><tbody id="salesTableBody"></tbody></table></div>
+</div>
+</div>
+
+<!-- Reports Page -->
+<div class="page-section" id="page-reports">
+<div class="content-section" style="padding:0 2rem 1.5rem;">
+<div class="section-header">
+<h2><i class="fas fa-chart-bar" style="color:#3b82f6;margin-right:0.5rem;"></i>Analytics Dashboard</h2>
+<div style="display:flex;gap:0.5rem;">
+<button class="btn btn-outline" onclick="downloadReport()"><i class="fas fa-download"></i> Download Report</button>
+</div>
+</div>
+
+<!-- Top Stats Row -->
+<div class="stats-grid" style="grid-template-columns:repeat(4,1fr);margin-bottom:1.5rem;">
+<div class="stat-card report-card"><div class="stat-header"><div class="stat-icon green"><i class="fas fa-chart-line"></i></div><span class="badge badge-success">+12.5%</span></div><div class="stat-value">₱156,780</div><div class="stat-label">Monthly Revenue</div></div>
+<div class="stat-card report-card"><div class="stat-header"><div class="stat-icon orange"><i class="fas fa-users"></i></div><span class="badge badge-success">+35%</span></div><div class="stat-value">342</div><div class="stat-label">Total Customers</div></div>
+<div class="stat-card report-card"><div class="stat-header"><div class="stat-icon blue"><i class="fas fa-shopping-basket"></i></div><span class="badge badge-success">+8.2%</span></div><div class="stat-value">1,056</div><div class="stat-label">Items Sold</div></div>
+<div class="stat-card report-card"><div class="stat-header"><div class="stat-icon red"><i class="fas fa-percentage"></i></div><span class="badge badge-warning">-2.1%</span></div><div class="stat-value">24.5%</div><div class="stat-label">Profit Margin</div></div>
+</div>
+
+<!-- Second Row: Revenue Breakdown + Customer Analytics -->
+<div class="report-row" style="display:grid;grid-template-columns:1fr 1fr;gap:1.2rem;margin-bottom:1.5rem;">
+<!-- Revenue Breakdown Card -->
+<div class="table-container" style="padding:1.5rem;">
+<div style="display:flex;align-items:center;gap:0.5rem;margin-bottom:1.2rem;">
+<div style="width:36px;height:36px;border-radius:10px;background:linear-gradient(135deg,#dbeafe,#bfdbfe);display:flex;align-items:center;justify-content:center;"><i class="fas fa-chart-pie" style="color:#3b82f6;"></i></div>
+<h3 style="font-size:1rem;color:var(--dark);">Revenue Breakdown</h3>
+</div>
+<div class="report-detail-item"><span class="report-detail-label">Gross Sales</span><span class="report-detail-value">₱198,450</span></div>
+<div class="report-detail-item"><span class="report-detail-label">Discounts Given</span><span class="report-detail-value" style="color:var(--danger)">-₱12,670</span></div>
+<div class="report-detail-item"><span class="report-detail-label">Returns</span><span class="report-detail-value" style="color:var(--danger)">-₱8,230</span></div>
+<div class="report-detail-item"><span class="report-detail-label">Tax Collected (12%)</span><span class="report-detail-value">₱21,230</span></div>
+<div class="report-detail-item" style="border-top:2px solid var(--gray-light);margin-top:0.5rem;padding-top:1rem;"><span class="report-detail-label" style="font-weight:700;color:var(--dark);">NET REVENUE</span><span class="report-detail-value" style="font-size:1.1rem;background:linear-gradient(135deg,#3b82f6,#06b6d4);-webkit-background-clip:text;-webkit-text-fill-color:transparent;">₱156,780</span></div>
+<div style="margin-top:1rem;"><p style="font-size:0.75rem;color:var(--gray);margin-bottom:0.3rem;">Daily Average</p><div style="display:flex;align-items:center;gap:0.5rem;"><div class="report-chart-bar" style="width:75%;"></div><span style="font-size:0.8rem;font-weight:600;">₱5,226/day</span></div></div>
+</div>
+
+<!-- Customer Analytics Card -->
+<div class="table-container" style="padding:1.5rem;">
+<div style="display:flex;align-items:center;gap:0.5rem;margin-bottom:1.2rem;">
+<div style="width:36px;height:36px;border-radius:10px;background:linear-gradient(135deg,#fef3c7,#fde68a);display:flex;align-items:center;justify-content:center;"><i class="fas fa-users" style="color:#d97706;"></i></div>
+<h3 style="font-size:1rem;color:var(--dark);">Customer Analytics</h3>
+</div>
+<div class="report-detail-item"><span class="report-detail-label">New Customers</span><span class="report-detail-value">+89</span></div>
+<div class="report-detail-item"><span class="report-detail-label">Returning Customers</span><span class="report-detail-value">253</span></div>
+<div class="report-detail-item"><span class="report-detail-label">Average Order Value</span><span class="report-detail-value">₱458</span></div>
+<div class="report-detail-item"><span class="report-detail-label">Peak Hour</span><span class="report-detail-value">10:00 AM - 12:00 PM</span></div>
+<div class="report-detail-item" style="border-top:2px solid var(--gray-light);margin-top:0.5rem;padding-top:1rem;"><span class="report-detail-label" style="font-weight:700;color:var(--dark);">TOTAL CUSTOMERS</span><span class="report-detail-value" style="font-size:1.1rem;background:linear-gradient(135deg,#f97316,#fbbf24);-webkit-background-clip:text;-webkit-text-fill-color:transparent;">342</span></div>
+<div style="margin-top:1rem;"><p style="font-size:0.75rem;color:var(--gray);margin-bottom:0.3rem;">Customer Growth</p><div style="display:flex;align-items:center;gap:0.5rem;"><div class="report-chart-bar" style="width:60%;background:linear-gradient(90deg,#f97316,#fbbf24);"></div><span style="font-size:0.8rem;font-weight:600;color:#f97316;">+35% vs last month</span></div></div>
+</div>
+</div>
+
+<!-- Third Row: Items Sold + Profit Analysis -->
+<div class="report-row" style="display:grid;grid-template-columns:1fr 1fr;gap:1.2rem;margin-bottom:1.5rem;">
+<!-- Items Sold Card -->
+<div class="table-container" style="padding:1.5rem;">
+<div style="display:flex;align-items:center;gap:0.5rem;margin-bottom:1.2rem;">
+<div style="width:36px;height:36px;border-radius:10px;background:linear-gradient(135deg,#e0e7ff,#c7d2fe);display:flex;align-items:center;justify-content:center;"><i class="fas fa-shopping-basket" style="color:#6366f1;"></i></div>
+<h3 style="font-size:1rem;color:var(--dark);">Items Sold Breakdown</h3>
+</div>
+<div class="report-detail-item"><span class="report-detail-label">Fruits & Vegetables</span><span class="report-detail-value">412 items</span></div>
+<div class="report-detail-item"><span class="report-detail-label">Meat & Dairy</span><span class="report-detail-value">298 items</span></div>
+<div class="report-detail-item"><span class="report-detail-label">Beverages</span><span class="report-detail-value">187 items</span></div>
+<div class="report-detail-item"><span class="report-detail-label">Snacks & Others</span><span class="report-detail-value">159 items</span></div>
+<div class="report-detail-item" style="border-top:2px solid var(--gray-light);margin-top:0.5rem;padding-top:1rem;"><span class="report-detail-label" style="font-weight:700;color:var(--dark);">TOTAL ITEMS SOLD</span><span class="report-detail-value" style="font-size:1.1rem;background:linear-gradient(135deg,#6366f1,#8b5cf6);-webkit-background-clip:text;-webkit-text-fill-color:transparent;">1,056</span></div>
+<div style="margin-top:1rem;"><p style="font-size:0.75rem;color:var(--gray);margin-bottom:0.3rem;">Top Category: Fruits & Vegetables</p><div style="display:flex;align-items:center;gap:0.5rem;"><div class="report-chart-bar" style="width:39%;background:linear-gradient(90deg,#6366f1,#8b5cf6);"></div><span style="font-size:0.8rem;font-weight:600;color:#6366f1;">39% of sales</span></div></div>
+</div>
+
+<!-- Profit Analysis Card -->
+<div class="table-container" style="padding:1.5rem;">
+<div style="display:flex;align-items:center;gap:0.5rem;margin-bottom:1.2rem;">
+<div style="width:36px;height:36px;border-radius:10px;background:linear-gradient(135deg,#fce7f3,#fbcfe8);display:flex;align-items:center;justify-content:center;"><i class="fas fa-percentage" style="color:#ec4899;"></i></div>
+<h3 style="font-size:1rem;color:var(--dark);">Profit Analysis</h3>
+</div>
+<div class="report-detail-item"><span class="report-detail-label">Revenue</span><span class="report-detail-value">₱156,780</span></div>
+<div class="report-detail-item"><span class="report-detail-label">Cost of Goods</span><span class="report-detail-value" style="color:var(--danger)">-₱98,670</span></div>
+<div class="report-detail-item"><span class="report-detail-label">Operating Costs</span><span class="report-detail-value" style="color:var(--danger)">-₱19,890</span></div>
+<div class="report-detail-item"><span class="report-detail-label">Net Profit</span><span class="report-detail-value" style="color:var(--primary)">₱38,220</span></div>
+<div class="report-detail-item" style="border-top:2px solid var(--gray-light);margin-top:0.5rem;padding-top:1rem;"><span class="report-detail-label" style="font-weight:700;color:var(--dark);">PROFIT MARGIN</span><span class="report-detail-value" style="font-size:1.1rem;background:linear-gradient(135deg,#ec4899,#f43f5e);-webkit-background-clip:text;-webkit-text-fill-color:transparent;">24.5%</span></div>
+<div style="margin-top:1rem;"><p style="font-size:0.75rem;color:var(--gray);margin-bottom:0.3rem;">Target: 30%</p><div style="display:flex;align-items:center;gap:0.5rem;"><div class="report-chart-bar" style="width:82%;background:linear-gradient(90deg,#ec4899,#f43f5e);"></div><span style="font-size:0.8rem;font-weight:600;color:#ec4899;">82% of target</span></div></div>
+</div>
+</div>
+
+<!-- Fourth Row: Weekly Sales Trend + Top Selling Products -->
+<div class="report-row" style="display:grid;grid-template-columns:1fr 1fr;gap:1.2rem;margin-bottom:1.5rem;">
+<!-- Weekly Sales Trend -->
+<div class="table-container" style="padding:1.5rem;">
+<div style="display:flex;align-items:center;gap:0.5rem;margin-bottom:1.2rem;">
+<div style="width:36px;height:36px;border-radius:10px;background:linear-gradient(135deg,#dbeafe,#bfdbfe);display:flex;align-items:center;justify-content:center;"><i class="fas fa-chart-area" style="color:#3b82f6;"></i></div>
+<h3 style="font-size:1rem;color:var(--dark);">Weekly Sales Trend</h3>
+</div>
+<div style="display:flex;align-items:flex-end;gap:0.5rem;height:140px;padding-top:1rem;">
+<div style="flex:1;display:flex;flex-direction:column;align-items:center;gap:0.3rem;"><div style="width:100%;background:linear-gradient(180deg,#3b82f6,#06b6d4);border-radius:6px 6px 0 0;transition:height 0.5s ease;height:65%;"></div><span style="font-size:0.65rem;color:var(--gray);font-weight:500;">Mon</span><span style="font-size:0.6rem;color:#3b82f6;font-weight:600;">₱18.2k</span></div>
+<div style="flex:1;display:flex;flex-direction:column;align-items:center;gap:0.3rem;"><div style="width:100%;background:linear-gradient(180deg,#3b82f6,#06b6d4);border-radius:6px 6px 0 0;transition:height 0.5s ease;height:82%;"></div><span style="font-size:0.65rem;color:var(--gray);font-weight:500;">Tue</span><span style="font-size:0.6rem;color:#3b82f6;font-weight:600;">₱22.8k</span></div>
+<div style="flex:1;display:flex;flex-direction:column;align-items:center;gap:0.3rem;"><div style="width:100%;background:linear-gradient(180deg,#3b82f6,#06b6d4);border-radius:6px 6px 0 0;transition:height 0.5s ease;height:55%;"></div><span style="font-size:0.65rem;color:var(--gray);font-weight:500;">Wed</span><span style="font-size:0.6rem;color:#3b82f6;font-weight:600;">₱15.4k</span></div>
+<div style="flex:1;display:flex;flex-direction:column;align-items:center;gap:0.3rem;"><div style="width:100%;background:linear-gradient(180deg,#3b82f6,#06b6d4);border-radius:6px 6px 0 0;transition:height 0.5s ease;height:95%;"></div><span style="font-size:0.65rem;color:var(--gray);font-weight:500;">Thu</span><span style="font-size:0.6rem;color:#3b82f6;font-weight:600;">₱26.1k</span></div>
+<div style="flex:1;display:flex;flex-direction:column;align-items:center;gap:0.3rem;"><div style="width:100%;background:linear-gradient(180deg,#3b82f6,#06b6d4);border-radius:6px 6px 0 0;transition:height 0.5s ease;height:72%;"></div><span style="font-size:0.65rem;color:var(--gray);font-weight:500;">Fri</span><span style="font-size:0.6rem;color:#3b82f6;font-weight:600;">₱20.3k</span></div>
+<div style="flex:1;display:flex;flex-direction:column;align-items:center;gap:0.3rem;"><div style="width:100%;background:linear-gradient(180deg,#3b82f6,#06b6d4);border-radius:6px 6px 0 0;transition:height 0.5s ease;height:100%;"></div><span style="font-size:0.65rem;color:var(--gray);font-weight:500;">Sat</span><span style="font-size:0.6rem;color:#3b82f6;font-weight:600;">₱28.5k</span></div>
+<div style="flex:1;display:flex;flex-direction:column;align-items:center;gap:0.3rem;"><div style="width:100%;background:linear-gradient(180deg,#3b82f6,#06b6d4);border-radius:6px 6px 0 0;transition:height 0.5s ease;height:88%;"></div><span style="font-size:0.65rem;color:var(--gray);font-weight:500;">Sun</span><span style="font-size:0.6rem;color:#3b82f6;font-weight:600;">₱25.2k</span></div>
+</div>
+<div style="display:flex;justify-content:space-between;margin-top:1rem;padding-top:0.8rem;border-top:1px solid var(--gray-light);">
+<span style="font-size:0.75rem;color:var(--gray);">Total Weekly Sales</span>
+<span style="font-size:0.9rem;font-weight:700;color:var(--dark);">₱156,500</span>
+</div>
+</div>
+
+<!-- Top Selling Products -->
+<div class="table-container" style="padding:1.5rem;">
+<div style="display:flex;align-items:center;gap:0.5rem;margin-bottom:1.2rem;">
+<div style="width:36px;height:36px;border-radius:10px;background:linear-gradient(135deg,#dcfce7,#bbf7d0);display:flex;align-items:center;justify-content:center;"><i class="fas fa-trophy" style="color:#16a34a;"></i></div>
+<h3 style="font-size:1rem;color:var(--dark);">Top Selling Products</h3>
+</div>
+<div style="display:flex;flex-direction:column;gap:0.8rem;">
+<div style="display:flex;align-items:center;gap:0.75rem;"><span style="font-size:1.5rem;">🍎</span><div style="flex:1;"><div style="display:flex;justify-content:space-between;margin-bottom:0.2rem;"><span style="font-size:0.8rem;font-weight:600;color:var(--dark);">Fresh Apples</span><span style="font-size:0.75rem;font-weight:700;color:#3b82f6;">342 sold</span></div><div style="height:6px;background:var(--gray-light);border-radius:3px;overflow:hidden;"><div style="width:100%;height:100%;background:linear-gradient(90deg,#3b82f6,#06b6d4);border-radius:3px;"></div></div></div></div>
+<div style="display:flex;align-items:center;gap:0.75rem;"><span style="font-size:1.5rem;">🥛</span><div style="flex:1;"><div style="display:flex;justify-content:space-between;margin-bottom:0.2rem;"><span style="font-size:0.8rem;font-weight:600;color:var(--dark);">Fresh Milk</span><span style="font-size:0.75rem;font-weight:700;color:#3b82f6;">287 sold</span></div><div style="height:6px;background:var(--gray-light);border-radius:3px;overflow:hidden;"><div style="width:84%;height:100%;background:linear-gradient(90deg,#3b82f6,#06b6d4);border-radius:3px;"></div></div></div></div>
+<div style="display:flex;align-items:center;gap:0.75rem;"><span style="font-size:1.5rem;">🥤</span><div style="flex:1;"><div style="display:flex;justify-content:space-between;margin-bottom:0.2rem;"><span style="font-size:0.8rem;font-weight:600;color:var(--dark);">Coca-Cola</span><span style="font-size:0.75rem;font-weight:700;color:#3b82f6;">198 sold</span></div><div style="height:6px;background:var(--gray-light);border-radius:3px;overflow:hidden;"><div style="width:58%;height:100%;background:linear-gradient(90deg,#3b82f6,#06b6d4);border-radius:3px;"></div></div></div></div>
+<div style="display:flex;align-items:center;gap:0.75rem;"><span style="font-size:1.5rem;">🍗</span><div style="flex:1;"><div style="display:flex;justify-content:space-between;margin-bottom:0.2rem;"><span style="font-size:0.8rem;font-weight:600;color:var(--dark);">Chicken Breast</span><span style="font-size:0.75rem;font-weight:700;color:#3b82f6;">156 sold</span></div><div style="height:6px;background:var(--gray-light);border-radius:3px;overflow:hidden;"><div style="width:46%;height:100%;background:linear-gradient(90deg,#3b82f6,#06b6d4);border-radius:3px;"></div></div></div></div>
+<div style="display:flex;align-items:center;gap:0.75rem;"><span style="font-size:1.5rem;">🥕</span><div style="flex:1;"><div style="display:flex;justify-content:space-between;margin-bottom:0.2rem;"><span style="font-size:0.8rem;font-weight:600;color:var(--dark);">Carrots</span><span style="font-size:0.75rem;font-weight:700;color:#3b82f6;">124 sold</span></div><div style="height:6px;background:var(--gray-light);border-radius:3px;overflow:hidden;"><div style="width:36%;height:100%;background:linear-gradient(90deg,#3b82f6,#06b6d4);border-radius:3px;"></div></div></div></div>
+</div>
+</div>
+</div>
+
+<!-- Fifth Row: Payment Methods + Inventory Status -->
+<div class="report-row" style="display:grid;grid-template-columns:1fr 1fr;gap:1.2rem;margin-bottom:1.5rem;">
+<!-- Payment Methods -->
+<div class="table-container" style="padding:1.5rem;">
+<div style="display:flex;align-items:center;gap:0.5rem;margin-bottom:1.2rem;">
+<div style="width:36px;height:36px;border-radius:10px;background:linear-gradient(135deg,#fef3c7,#fde68a);display:flex;align-items:center;justify-content:center;"><i class="fas fa-wallet" style="color:#d97706;"></i></div>
+<h3 style="font-size:1rem;color:var(--dark);">Payment Methods</h3>
+</div>
+<div style="display:flex;flex-direction:column;gap:1rem;">
+<div>
+<div style="display:flex;justify-content:space-between;margin-bottom:0.3rem;"><span style="font-size:0.8rem;font-weight:600;color:var(--dark);"><i class="fas fa-money-bill-wave" style="color:#16a34a;margin-right:0.4rem;"></i>Cash</span><span style="font-size:0.8rem;font-weight:700;color:var(--dark);">₱78,390 (50%)</span></div>
+<div style="height:8px;background:var(--gray-light);border-radius:4px;overflow:hidden;"><div style="width:50%;height:100%;background:linear-gradient(90deg,#16a34a,#22c55e);border-radius:4px;"></div></div>
+</div>
+<div>
+<div style="display:flex;justify-content:space-between;margin-bottom:0.3rem;"><span style="font-size:0.8rem;font-weight:600;color:var(--dark);"><i class="fas fa-mobile-alt" style="color:#3b82f6;margin-right:0.4rem;"></i>GCash</span><span style="font-size:0.8rem;font-weight:700;color:var(--dark);">₱47,034 (30%)</span></div>
+<div style="height:8px;background:var(--gray-light);border-radius:4px;overflow:hidden;"><div style="width:30%;height:100%;background:linear-gradient(90deg,#3b82f6,#06b6d4);border-radius:4px;"></div></div>
+</div>
+<div>
+<div style="display:flex;justify-content:space-between;margin-bottom:0.3rem;"><span style="font-size:0.8rem;font-weight:600;color:var(--dark);"><i class="fas fa-credit-card" style="color:#6366f1;margin-right:0.4rem;"></i>Card</span><span style="font-size:0.8rem;font-weight:700;color:var(--dark);">₱31,356 (20%)</span></div>
+<div style="height:8px;background:var(--gray-light);border-radius:4px;overflow:hidden;"><div style="width:20%;height:100%;background:linear-gradient(90deg,#6366f1,#8b5cf6);border-radius:4px;"></div></div>
+</div>
+</div>
+<div style="display:flex;justify-content:space-between;margin-top:1rem;padding-top:0.8rem;border-top:1px solid var(--gray-light);">
+<span style="font-size:0.75rem;color:var(--gray);">Total Transactions</span>
+<span style="font-size:0.9rem;font-weight:700;color:var(--dark);">1,056</span>
+</div>
+</div>
+
+<!-- Inventory Status -->
+<div class="table-container" style="padding:1.5rem;">
+<div style="display:flex;align-items:center;gap:0.5rem;margin-bottom:1.2rem;">
+<div style="width:36px;height:36px;border-radius:10px;background:linear-gradient(135deg,#fee2e2,#fecaca);display:flex;align-items:center;justify-content:center;"><i class="fas fa-warehouse" style="color:#dc2626;"></i></div>
+<h3 style="font-size:1rem;color:var(--dark);">Inventory Status</h3>
+</div>
+<div style="display:flex;flex-direction:column;gap:1rem;">
+<div>
+<div style="display:flex;justify-content:space-between;margin-bottom:0.3rem;"><span style="font-size:0.8rem;font-weight:600;color:var(--dark);"><i class="fas fa-check-circle" style="color:#16a34a;margin-right:0.4rem;"></i>In Stock</span><span style="font-size:0.8rem;font-weight:700;color:#16a34a;">1,089 units (87%)</span></div>
+<div style="height:8px;background:var(--gray-light);border-radius:4px;overflow:hidden;"><div style="width:87%;height:100%;background:linear-gradient(90deg,#16a34a,#22c55e);border-radius:4px;"></div></div>
+</div>
+<div>
+<div style="display:flex;justify-content:space-between;margin-bottom:0.3rem;"><span style="font-size:0.8rem;font-weight:600;color:var(--dark);"><i class="fas fa-exclamation-triangle" style="color:#eab308;margin-right:0.4rem;"></i>Low Stock</span><span style="font-size:0.8rem;font-weight:700;color:#eab308;">108 units (9%)</span></div>
+<div style="height:8px;background:var(--gray-light);border-radius:4px;overflow:hidden;"><div style="width:9%;height:100%;background:linear-gradient(90deg,#eab308,#fbbf24);border-radius:4px;"></div></div>
+</div>
+<div>
+<div style="display:flex;justify-content:space-between;margin-bottom:0.3rem;"><span style="font-size:0.8rem;font-weight:600;color:var(--dark);"><i class="fas fa-times-circle" style="color:#dc2626;margin-right:0.4rem;"></i>Critical</span><span style="font-size:0.8rem;font-weight:700;color:#dc2626;">50 units (4%)</span></div>
+<div style="height:8px;background:var(--gray-light);border-radius:4px;overflow:hidden;"><div style="width:4%;height:100%;background:linear-gradient(90deg,#dc2626,#ef4444);border-radius:4px;"></div></div>
+</div>
+</div>
+<div style="display:flex;justify-content:space-between;margin-top:1rem;padding-top:0.8rem;border-top:1px solid var(--gray-light);">
+<span style="font-size:0.75rem;color:var(--gray);">Total SKUs</span>
+<span style="font-size:0.9rem;font-weight:700;color:var(--dark);">1,247</span>
+</div>
+</div>
+</div>
+
+<!-- Bottom Row: Hourly Sales Heatmap -->
+<div class="table-container" style="padding:1.5rem;margin-bottom:1.5rem;">
+<div style="display:flex;align-items:center;gap:0.5rem;margin-bottom:1.2rem;">
+<div style="width:36px;height:36px;border-radius:10px;background:linear-gradient(135deg,#dbeafe,#bfdbfe);display:flex;align-items:center;justify-content:center;"><i class="fas fa-clock" style="color:#3b82f6;"></i></div>
+<h3 style="font-size:1rem;color:var(--dark);">Hourly Sales Heatmap</h3>
+</div>
+<div style="display:grid;grid-template-columns:repeat(12,1fr);gap:0.3rem;">
+<div style="text-align:center;padding:0.6rem 0.2rem;border-radius:6px;background:rgba(59,130,246,0.1);font-size:0.65rem;color:var(--gray);">8AM<br><strong style="color:var(--dark);font-size:0.7rem;">₱3.2k</strong></div>
+<div style="text-align:center;padding:0.6rem 0.2rem;border-radius:6px;background:rgba(59,130,246,0.2);font-size:0.65rem;color:var(--gray);">9AM<br><strong style="color:var(--dark);font-size:0.7rem;">₱5.8k</strong></div>
+<div style="text-align:center;padding:0.6rem 0.2rem;border-radius:6px;background:rgba(59,130,246,0.35);font-size:0.65rem;color:var(--gray);">10AM<br><strong style="color:var(--dark);font-size:0.7rem;">₱8.4k</strong></div>
+<div style="text-align:center;padding:0.6rem 0.2rem;border-radius:6px;background:rgba(59,130,246,0.5);font-size:0.65rem;color:var(--gray);">11AM<br><strong style="color:var(--dark);font-size:0.7rem;">₱12.1k</strong></div>
+<div style="text-align:center;padding:0.6rem 0.2rem;border-radius:6px;background:rgba(59,130,246,0.7);font-size:0.65rem;color:#fff;">12PM<br><strong style="font-size:0.7rem;">₱15.6k</strong></div>
+<div style="text-align:center;padding:0.6rem 0.2rem;border-radius:6px;background:rgba(59,130,246,0.6);font-size:0.65rem;color:#fff;">1PM<br><strong style="font-size:0.7rem;">₱13.2k</strong></div>
+<div style="text-align:center;padding:0.6rem 0.2rem;border-radius:6px;background:rgba(59,130,246,0.4);font-size:0.65rem;color:var(--gray);">2PM<br><strong style="color:var(--dark);font-size:0.7rem;">₱9.8k</strong></div>
+<div style="text-align:center;padding:0.6rem 0.2rem;border-radius:6px;background:rgba(59,130,246,0.25);font-size:0.65rem;color:var(--gray);">3PM<br><strong style="color:var(--dark);font-size:0.7rem;">₱6.5k</strong></div>
+<div style="text-align:center;padding:0.6rem 0.2rem;border-radius:6px;background:rgba(59,130,246,0.3);font-size:0.65rem;color:var(--gray);">4PM<br><strong style="color:var(--dark);font-size:0.7rem;">₱7.9k</strong></div>
+<div style="text-align:center;padding:0.6rem 0.2rem;border-radius:6px;background:rgba(59,130,246,0.55);font-size:0.65rem;color:var(--gray);">5PM<br><strong style="color:var(--dark);font-size:0.7rem;">₱11.4k</strong></div>
+<div style="text-align:center;padding:0.6rem 0.2rem;border-radius:6px;background:rgba(59,130,246,0.45);font-size:0.65rem;color:var(--gray);">6PM<br><strong style="color:var(--dark);font-size:0.7rem;">₱10.2k</strong></div>
+<div style="text-align:center;padding:0.6rem 0.2rem;border-radius:6px;background:rgba(59,130,246,0.15);font-size:0.65rem;color:var(--gray);">7PM<br><strong style="color:var(--dark);font-size:0.7rem;">₱4.1k</strong></div>
+</div>
+<div style="display:flex;justify-content:space-between;margin-top:1rem;padding-top:0.8rem;border-top:1px solid var(--gray-light);">
+<span style="font-size:0.75rem;color:var(--gray);">Peak Hour: 12:00 PM (₱15,600)</span>
+<span style="font-size:0.75rem;color:var(--gray);">Lowest: 8:00 AM (₱3,200)</span>
+</div>
+</div>
+
+</div>
+</div>
+
+<!-- Settings Page -->
+<div class="page-section" id="page-settings">
+<div class="content-section">
+<div class="section-header"><h2>Store Settings</h2></div>
+<div class="table-container" style="padding:1.5rem;">
+<div style="max-width:500px;">
+<div class="form-group"><label>Store Name</label><input type="text" id="settingStoreName" value="FreshMart Grocery" style="width:100%;padding:0.6rem;border:1px solid var(--gray-light);border-radius:8px;font-family:'Poppins';background:var(--white);color:var(--dark);"></div>
+<div class="form-group"><label>Address</label><input type="text" id="settingAddress" value="Davao City" style="width:100%;padding:0.6rem;border:1px solid var(--gray-light);border-radius:8px;font-family:'Poppins';background:var(--white);color:var(--dark);"></div>
+<div class="form-group"><label>Tax Rate (%)</label><input type="number" id="settingTax" value="12" style="width:100%;padding:0.6rem;border:1px solid var(--gray-light);border-radius:8px;font-family:'Poppins';background:var(--white);color:var(--dark);"></div>
+<button class="btn btn-primary" onclick="saveSettings()">Save Changes</button>
+</div>
+</div>
+</div>
+</div>
+</main>
+</div>
+
+<!-- Add Product Modal -->
+<div class="modal-overlay" id="addProductModal"><div class="modal"><div class="modal-header"><h2>Add Product</h2><button class="modal-close" onclick="closeModal('addProductModal')"><i class="fas fa-times"></i></button></div>
+<form class="modal-form" id="addProductForm">
+<div class="form-group"><label>Name</label><input type="text" id="newProductName" required></div>
+<div class="form-group"><label>Category</label><select id="newProductCategory"><option>Fruits</option><option>Vegetables</option><option>Meat</option><option>Dairy</option><option>Beverages</option><option>Snacks</option></select></div>
+<div style="display:grid;grid-template-columns:1fr 1fr;gap:0.8rem;"><div class="form-group"><label>Price (₱)</label><input type="number" id="newProductPrice" step="0.01" required></div><div class="form-group"><label>Stock</label><input type="number" id="newProductStock" required></div></div>
+<div class="modal-actions"><button type="button" class="btn btn-outline" onclick="closeModal('addProductModal')">Cancel</button><button type="submit" class="btn btn-primary">Add</button></div>
+</form></div></div>
+
+<!-- Edit Product Modal -->
+<div class="modal-overlay" id="editProductModal">
+<div class="modal">
+<div class="modal-header"><h2>Edit Product</h2><button class="modal-close" onclick="closeModal('editProductModal')"><i class="fas fa-times"></i></button></div>
+<form class="modal-form" id="editProductForm">
+<input type="hidden" id="editProductId">
+<div class="form-group"><label>Product Name</label><input type="text" id="editProductName" required></div>
+<div class="form-group"><label>Category</label><select id="editProductCategory"><option>Fruits</option><option>Vegetables</option><option>Meat</option><option>Dairy</option><option>Beverages</option><option>Snacks</option><option>Household</option></select></div>
+<div style="display:grid;grid-template-columns:1fr 1fr;gap:0.8rem;">
+<div class="form-group"><label>Price (₱)</label><input type="number" id="editProductPrice" step="0.01" required></div>
+<div class="form-group"><label>Stock</label><input type="number" id="editProductStock" required></div>
+</div>
+<div class="modal-actions"><button type="button" class="btn btn-outline" onclick="closeModal('editProductModal')">Cancel</button><button type="submit" class="btn btn-primary">Save Changes</button></div>
+</form>
+</div>
+</div>
+
+<!-- Delete Confirm Modal -->
+<div class="modal-overlay" id="deleteModal">
+<div class="modal" style="text-align:center;padding:2rem;">
+<div style="font-size:3rem;color:var(--danger);margin-bottom:1rem;"><i class="fas fa-exclamation-circle"></i></div>
+<h2 style="margin-bottom:0.5rem;">Delete Product?</h2>
+<p style="color:var(--gray);margin-bottom:1.5rem;">This action cannot be undone.</p>
+<div style="display:flex;gap:0.75rem;justify-content:center;">
+<button class="btn btn-outline" onclick="closeModal('deleteModal')">Cancel</button>
+<button class="btn btn-primary" id="confirmDelete" style="background:var(--danger);">Delete</button>
+</div>
+</div>
+</div>
+
+<!-- Restock Modal -->
+<div class="modal-overlay" id="restockModal">
+<div class="modal">
+<div class="modal-header"><h2>Restock Product</h2><button class="modal-close" onclick="closeModal('restockModal')"><i class="fas fa-times"></i></button></div>
+<div style="text-align:center;padding:1rem 0;">
+<p style="color:var(--gray);font-size:0.8rem;">Current Stock</p>
+<h2 style="font-size:2rem;color:#3b82f6;" id="restockCurrent">0</h2>
+</div>
+<div class="modal-form">
+<div class="form-group"><label>Amount to Add</label><input type="number" id="restockAmount" value="50" min="1" style="width:100%;padding:0.6rem;border:1px solid var(--gray-light);border-radius:8px;font-family:'Poppins';background:var(--white);color:var(--dark);"></div>
+<div class="modal-actions"><button type="button" class="btn btn-outline" onclick="closeModal('restockModal')">Cancel</button><button type="button" class="btn btn-primary" id="confirmRestock">Add Stock</button></div>
+</div>
+</div>
+</div>
+
+<!-- Report Detail Modal -->
+<div class="modal-overlay" id="reportDetailModal">
+<div class="modal" style="max-width:500px;">
+<div class="modal-header"><h2 id="reportDetailTitle">Report Details</h2><button class="modal-close" onclick="closeModal('reportDetailModal')"><i class="fas fa-times"></i></button></div>
+<div id="reportDetailContent" style="padding:1rem 0;"></div>
+</div>
+</div>
+
+<!-- Payment Modal -->
+<div class="modal-overlay" id="paymentModal"><div class="modal"><div class="modal-header"><h2>Payment</h2><button class="modal-close" onclick="closeModal('paymentModal')"><i class="fas fa-times"></i></button></div>
+<div style="text-align:center;padding:1rem 0;"><p style="color:var(--gray);font-size:0.8rem;">Total</p><h2 style="font-size:2rem;background:linear-gradient(135deg,#3b82f6,#06b6d4);-webkit-background-clip:text;-webkit-text-fill-color:transparent;" id="paymentTotal">₱0.00</h2></div>
+<div class="modal-form"><div class="form-group"><label>Method</label><select id="paymentMethod" style="width:100%;padding:0.6rem;border:1px solid var(--gray-light);border-radius:8px;font-family:'Poppins';background:var(--white);color:var(--dark);"><option>Cash</option><option>GCash</option><option>Card</option></select></div>
+<div class="form-group"><label>Amount Received</label><input type="number" id="amountReceived" step="0.01" style="width:100%;padding:0.6rem;border:1px solid var(--gray-light);border-radius:8px;font-family:'Poppins';background:var(--white);color:var(--dark);"></div>
+<div class="modal-actions"><button type="button" class="btn btn-outline" onclick="closeModal('paymentModal')">Cancel</button><button type="button" class="btn btn-primary" id="confirmPayment">Complete</button></div>
+</div></div></div>
+
+<!-- Toast Container -->
+<div class="toast-container" id="toastContainer"></div>
+
+<script>
+// ─── API CONFIG ──────────────────────────────────────────────────────────────
+// Empty string = same origin (localhost:3000).
+// After deploying to Railway, change to: 'https://your-app.railway.app'
+const API = '';
+
+async function apiFetch(path, options = {}) {
+  const res = await fetch(API + path, {
+    headers: { 'Content-Type': 'application/json' },
+    ...options
+  });
+  if (!res.ok) {
+    const err = await res.json().catch(() => ({ error: 'Server error' }));
+    throw new Error(err.error || 'Request failed');
+  }
+  return res.json();
+}
+
+let products = [], cart = [], currentUser = null, currentCategory = 'all';
+let salesData = [];
+
+// Notification System
+const notificationBtn=document.getElementById('notificationBtn');
+const notificationDropdown=document.getElementById('notificationDropdown');
+const notifBadge=document.getElementById('notifBadge');
+let notifCount=3;
+
+notificationBtn.addEventListener('click',function(e){
+e.stopPropagation();
+const rect=notificationBtn.getBoundingClientRect();
+let rightPos=window.innerWidth-rect.right;
+if(rightPos<10)rightPos=10;
+if(rightPos>window.innerWidth-320)rightPos=window.innerWidth-330;
+notificationDropdown.style.top=(rect.bottom+10)+'px';
+notificationDropdown.style.right=rightPos+'px';
+notificationDropdown.style.left='auto';
+notificationDropdown.style.position='fixed';
+notificationDropdown.classList.toggle('active');
+});
+
+document.addEventListener('click',function(e){
+if(!notificationDropdown.contains(e.target)&&e.target!==notificationBtn&&!notificationBtn.contains(e.target)){
+notificationDropdown.classList.remove('active');
+}
+});
+
+function markRead(item){
+item.classList.remove('unread');
+notifCount=Math.max(0,notifCount-1);
+notifBadge.textContent=notifCount;
+if(notifCount===0)notifBadge.style.display='none';
+showToast('success','Read','Notification marked as read');
+}
+
+function markAllRead(){
+document.querySelectorAll('.notif-item').forEach(item=>item.classList.remove('unread'));
+notifCount=0;
+notifBadge.style.display='none';
+document.querySelector('.notif-count').textContent='0 new';
+showToast('success','Cleared','All notifications marked as read');
+return false;
+}
+
+// Real-time Clock
+function updateClock(){
+const now=new Date();
+const timeStr=now.toLocaleTimeString('en-US',{hour12:true,hour:'2-digit',minute:'2-digit',second:'2-digit'});
+const dateStr=now.toLocaleDateString('en-US',{month:'short',day:'numeric',year:'numeric'});
+const timeEl=document.getElementById('clockTime');
+const dateEl=document.getElementById('clockDate');
+if(timeEl)timeEl.textContent=timeStr;
+if(dateEl)dateEl.textContent=dateStr;
+}
+updateClock();
+setInterval(updateClock,1000);
+
+// Search Functionality
+const searchInput=document.getElementById('searchInput');
+const searchResults=document.getElementById('searchResults');
+
+searchInput.addEventListener('input',function(){
+const query=this.value.trim().toLowerCase();
+if(query.length===0){searchResults.classList.remove('active');return;}
+
+const filtered=products.filter(p=>p.name.toLowerCase().includes(query)||p.category.toLowerCase().includes(query));
+
+if(filtered.length===0){
+searchResults.innerHTML='<div class="search-no-results"><i class="fas fa-search"></i>No products found</div>';
+}else{
+searchResults.innerHTML='<div class="search-header">'+filtered.length+' result(s)</div>'+filtered.map(p=>`<div class="search-result-item" onclick="goToProduct(${p.id})"><span class="emoji">${p.emoji}</span><div class="info"><h4>${p.name}</h4><p>${p.category}</p></div><span class="price">₱${p.price.toFixed(2)}</span></div>`).join('');
+}
+searchResults.classList.add('active');
+});
+
+searchInput.addEventListener('focus',function(){
+if(this.value.trim().length>0){
+const rect=this.getBoundingClientRect();
+let leftPos=rect.left;
+if(leftPos+280>window.innerWidth)leftPos=window.innerWidth-290;
+if(leftPos<10)leftPos=10;
+searchResults.style.left=leftPos+'px';
+searchResults.style.top=(rect.bottom+8)+'px';
+searchResults.style.position='fixed';
+searchResults.classList.add('active');
+}
+});
+
+searchInput.addEventListener('input',function(){
+const rect=this.getBoundingClientRect();
+let leftPos=rect.left;
+if(leftPos+280>window.innerWidth)leftPos=window.innerWidth-290;
+if(leftPos<10)leftPos=10;
+searchResults.style.left=leftPos+'px';
+searchResults.style.top=(rect.bottom+8)+'px';
+searchResults.style.position='fixed';
+});
+
+document.addEventListener('click',function(e){
+if(!searchInput.contains(e.target)&&!searchResults.contains(e.target)){
+searchResults.classList.remove('active');
+}
+});
+
+function goToProduct(id){
+const product=products.find(p=>p.id===id);
+if(!product)return;
+searchResults.classList.remove('active');
+searchInput.value='';
+
+// Switch to POS page
+const posLink=document.querySelector('[data-page="pos"]');
+if(posLink)posLink.click();
+
+// Filter to the product's category
+document.querySelectorAll('.category-btn').forEach(btn=>{
+if(btn.dataset.cat===product.category||btn.dataset.cat==='all'){
+btn.click();
+}
+});
+
+setTimeout(()=>{
+addToCart(id);
+showToast('success','Found!',product.name+' added to cart');
+},300);
+}
+
+// ─── LOAD PRODUCTS FROM DB ───────────────────────────────────────────────────
+async function loadProductsFromDB(){
+  try {
+    const data = await apiFetch('/api/products');
+    products = data.map(p => ({
+      id: p.id,
+      name: p.name,
+      category: p.category,
+      price: parseFloat(p.price),
+      stock: parseInt(p.stock),
+      emoji: p.emoji || '📦'
+    }));
+  } catch(err) {
+    showToast('error','DB Error','Could not load products from database');
+  }
+}
+
+// ─── DASHBOARD STATS FROM DB ─────────────────────────────────────────────────
+async function loadDashboardStats(){
+  try {
+    const stats = await apiFetch('/api/stats');
+    // Update stat cards
+    const cards = document.querySelectorAll('#page-dashboard .stat-value');
+    if(cards[0]) cards[0].textContent = '₱' + parseFloat(stats.today_sales).toLocaleString('en-PH',{minimumFractionDigits:2,maximumFractionDigits:2});
+    if(cards[1]) cards[1].textContent = stats.today_orders;
+    if(cards[2]) cards[2].textContent = stats.total_products.toLocaleString();
+    if(cards[3]) cards[3].textContent = stats.low_stock;
+  } catch(err) {
+    // Silently fail — dashboard shows static values as fallback
+  }
+}
+
+// ─── SALES DATA (from API) ───────────────────────────────────────────────────
+async function loadSales(filter='all'){
+const tbody=document.getElementById('salesTableBody');
+tbody.innerHTML='<tr><td colspan="6" style="text-align:center;padding:2rem;color:var(--gray)"><i class="fas fa-spinner fa-spin" style="font-size:1.5rem;margin-bottom:0.5rem;display:block"></i>Loading...</td></tr>';
+try {
+  const orders = await apiFetch('/api/orders' + (filter && filter !== 'all' ? '?filter='+filter : ''));
+  salesData = orders;
+  if(orders.length===0){
+    tbody.innerHTML='<tr><td colspan="6" style="text-align:center;padding:2rem;color:var(--gray)"><i class="fas fa-receipt" style="font-size:2rem;margin-bottom:0.5rem;display:block"></i>No sales found for this period</td></tr>';
+    return;
+  }
+  tbody.innerHTML=orders.map(s=>{
+    const d=new Date(s.created_at);
+    return `<tr><td><strong>#${s.receipt_id}</strong></td><td>${d.toLocaleDateString('en-US',{month:'short',day:'numeric'})}, ${d.toLocaleTimeString('en-US',{hour:'2-digit',minute:'2-digit'})}</td><td>${s.cashier}</td><td>${s.item_count} items</td><td><strong>₱${parseFloat(s.total).toLocaleString()}</strong></td><td>${s.payment_method}</td></tr>`;
+  }).join('');
+} catch(err) {
+  tbody.innerHTML='<tr><td colspan="6" style="text-align:center;padding:2rem;color:var(--danger)">Failed to load sales. Is the server running?</td></tr>';
+}
+}
+
+// Sales filter buttons
+document.querySelectorAll('.sales-filter').forEach(btn=>{
+btn.addEventListener('click',function(){
+document.querySelectorAll('.sales-filter').forEach(b=>b.classList.remove('active'));
+this.classList.add('active');
+loadSales(this.dataset.filter);
+});
+});
+
+// Export Inventory to CSV
+function exportInventory(){
+const headers=['Product ID','Product Name','Category','Price','Stock','Status'];
+const rows=products.map(p=>[
+String(p.id),
+'"'+p.name+'"',
+p.category,
+p.price.toFixed(2),
+String(p.stock),
+p.stock>20?'In Stock':p.stock>10?'Low Stock':'Critical'
+]);
+
+const csv=[headers.join(','),...rows.map(r=>r.join(','))].join('\n');
+
+const blob=new Blob([csv],{type:'text/csv;charset=utf-8;'});
+const link=document.createElement('a');
+const url=URL.createObjectURL(blob);
+link.setAttribute('href',url);
+link.setAttribute('download','inventory_'+new Date().toISOString().slice(0,10)+'.csv');
+link.style.visibility='hidden';
+document.body.appendChild(link);
+link.click();
+document.body.removeChild(link);
+
+showToast('success','Exported','Inventory downloaded as CSV');
+}
+
+// Report Details
+function showReportDetail(type){
+// All analytics are now displayed directly on the Reports page
+// This function is kept for backward compatibility but does nothing
+showToast('info','Analytics','All details are displayed on the dashboard below');
+}
+
+function downloadReport(){
+const reportData=`FreshMart POS Report\nGenerated: ${new Date().toLocaleString()}\n\nMonthly Revenue: ₱156,780\nTotal Customers: 342\nItems Sold: 1,056\nProfit Margin: 24.5%\n\n--- End of Report ---`;
+const blob=new Blob([reportData],{type:'text/plain'});
+const link=document.createElement('a');
+link.href=URL.createObjectURL(blob);
+link.download='FreshMart_Report_'+new Date().toISOString().slice(0,10)+'.txt';
+document.body.appendChild(link);
+link.click();
+document.body.removeChild(link);
+showToast('success','Downloaded','Report saved to your device');
+}
+
+// Generate Particles
+const particlesContainer=document.getElementById('particles');
+for(let i=0;i<15;i++){
+const p=document.createElement('div');p.className='particle';
+p.style.left=Math.random()*100+'%';
+p.style.animationDuration=(10+Math.random()*10)+'s';
+p.style.animationDelay=Math.random()*5+'s';
+p.style.width=(3+Math.random()*6)+'px';
+p.style.height=p.style.width;
+const colors=['rgba(59,130,246,','rgba(6,182,212,','rgba(139,92,246,'];
+const c=colors[Math.floor(Math.random()*colors.length)];
+p.style.background=c+(0.2+Math.random()*0.3)+')';
+particlesContainer.appendChild(p);
+}
+
+// Login Dark Mode
+const loginThemeToggle=document.getElementById('loginThemeToggle');
+const savedLoginTheme=localStorage.getItem('loginTheme');
+if(savedLoginTheme==='dark'){document.documentElement.setAttribute('data-login-theme','dark');loginThemeToggle.innerHTML='<i class="fas fa-sun" style="color:#fbbf24"></i>';}
+
+loginThemeToggle.addEventListener('click',function(){
+const isDark=document.documentElement.getAttribute('data-login-theme')==='dark';
+if(isDark){document.documentElement.removeAttribute('data-login-theme');localStorage.setItem('loginTheme','light');this.innerHTML='<i class="fas fa-moon"></i>';}
+else{document.documentElement.setAttribute('data-login-theme','dark');localStorage.setItem('loginTheme','dark');this.innerHTML='<i class="fas fa-sun" style="color:#fbbf24"></i>';}
+});
+
+// Dark Mode
+const themeToggle=document.getElementById('themeToggle');
+const savedTheme=localStorage.getItem('theme');
+if(savedTheme==='dark'){document.documentElement.setAttribute('data-theme','dark');themeToggle.innerHTML='<i class="fas fa-sun"></i>';}
+
+themeToggle.addEventListener('click',function(){
+const isDark=document.documentElement.getAttribute('data-theme')==='dark';
+if(isDark){document.documentElement.removeAttribute('data-theme');localStorage.setItem('theme','light');this.innerHTML='<i class="fas fa-moon"></i>';showToast('success','Light Mode','Switched to light theme');}
+else{document.documentElement.setAttribute('data-theme','dark');localStorage.setItem('theme','dark');this.innerHTML='<i class="fas fa-sun"></i>';showToast('success','Dark Mode','Switched to dark theme');}
+});
+
+// Login
+document.getElementById('loginForm').addEventListener('submit', async function(e){
+e.preventDefault();
+const u = document.getElementById('username').value.trim();
+const p = document.getElementById('password').value.trim();
+const loginBtn = document.getElementById('loginBtn');
+loginBtn.disabled = true;
+loginBtn.innerHTML = '<i class="fas fa-spinner fa-spin"></i> Signing in...';
+try {
+  const user = await apiFetch('/api/login', {
+    method: 'POST',
+    body: JSON.stringify({ username: u, password: p })
+  });
+  currentUser = user;
+  const btnIcon = document.querySelector('.btn-login i');
+  if(btnIcon){btnIcon.classList.add('check-pop');setTimeout(()=>btnIcon.classList.remove('check-pop'),500);}
+  showToast('success','Welcome!','Hello, '+currentUser.name);
+  document.getElementById('loginPage').style.display='none';
+  document.getElementById('dashboard').style.display='block';
+  document.getElementById('userName').textContent=currentUser.name;
+  document.getElementById('userRole').textContent=currentUser.role;
+  document.getElementById('userAvatar').textContent=currentUser.name.charAt(0);
+
+  document.querySelectorAll('[data-role="admin"]').forEach(el=>{
+    el.style.display=currentUser.role==='Admin'?'list-item':'none';
+  });
+  document.querySelectorAll('.page-section').forEach(x=>x.classList.remove('active'));
+  document.querySelectorAll('.nav-link').forEach(x=>x.classList.remove('active'));
+  if(currentUser.role==='Cashier'){
+    document.getElementById('page-pos').classList.add('active');
+    document.querySelector('[data-page="pos"]').classList.add('active');
+    document.getElementById('pageTitle').textContent='Point of Sale';
+  }else{
+    document.getElementById('page-dashboard').classList.add('active');
+    document.querySelector('[data-page="dashboard"]').classList.add('active');
+    document.getElementById('pageTitle').textContent='Dashboard';
+  }
+  await loadProductsFromDB();
+  loadPOS(); loadProducts(); loadInventory();
+  loadDashboardStats();
+  loadSettings();
+} catch(err) {
+  const form=document.getElementById('loginForm');
+  form.classList.add('shake');
+  setTimeout(()=>form.classList.remove('shake'),500);
+  showToast('error','Invalid Login','Wrong username or password');
+} finally {
+  loginBtn.disabled = false;
+  loginBtn.innerHTML = '<i class="fas fa-sign-in-alt"></i> Sign In';
+}
+});
+
+document.getElementById('togglePassword').addEventListener('click',function(e){
+e.preventDefault();
+const pwd=document.getElementById('password');
+if(pwd.type==='password'){pwd.type='text';this.classList.remove('fa-eye');this.classList.add('fa-eye-slash');}
+else{pwd.type='password';this.classList.remove('fa-eye-slash');this.classList.add('fa-eye');}
+});
+
+document.getElementById('logoutBtn').addEventListener('click',function(){
+currentUser=null;cart=[];
+document.getElementById('dashboard').style.display='none';
+document.getElementById('loginPage').style.display='flex';
+showToast('success','Logged Out','See you soon!');
+});
+
+// Mobile Menu
+const mobileMenuBtn=document.getElementById('mobileMenuBtn');
+const sidebar=document.getElementById('sidebar');
+const sidebarOverlay=document.getElementById('sidebarOverlay');
+
+function checkMobile(){
+if(window.innerWidth<=768){
+mobileMenuBtn.style.display='flex';
+}else{
+mobileMenuBtn.style.display='none';
+sidebar.classList.remove('open');
+sidebarOverlay.style.display='none';
+}
+}
+checkMobile();
+window.addEventListener('resize',checkMobile);
+
+mobileMenuBtn.addEventListener('click',function(){
+sidebar.classList.toggle('open');
+sidebarOverlay.style.display=sidebar.classList.contains('open')?'block':'none';
+});
+
+sidebarOverlay.addEventListener('click',function(){
+sidebar.classList.remove('open');
+this.style.display='none';
+});
+
+// Close sidebar when clicking nav links on mobile
+document.querySelectorAll('.nav-link').forEach(l=>{
+l.addEventListener('click',function(){
+if(window.innerWidth<=768){
+sidebar.classList.remove('open');
+sidebarOverlay.style.display='none';
+}
+});
+});
+
+// Navigation helper
+function goToPage(pageName){
+const link=document.querySelector('[data-page="'+pageName+'"]');
+if(link)link.click();
+}
+
+// Navigation
+document.querySelectorAll('.nav-link').forEach(l=>{
+l.addEventListener('click',function(){
+// Prevent cashier from accessing admin-only pages
+const adminPages=['dashboard','reports','settings'];
+if(currentUser&&currentUser.role==='Cashier'&&adminPages.includes(this.dataset.page)){
+showToast('warning','Access Denied','Cashier cannot access '+this.dataset.page);
+return;
+}
+document.querySelectorAll('.nav-link').forEach(x=>x.classList.remove('active'));this.classList.add('active');
+document.querySelectorAll('.page-section').forEach(x=>x.classList.remove('active'));
+document.getElementById('page-'+this.dataset.page).classList.add('active');
+const t={dashboard:'Dashboard',pos:'Point of Sale',products:'Products',inventory:'Inventory',sales:'Sales',reports:'Reports',settings:'Settings'};
+document.getElementById('pageTitle').textContent=t[this.dataset.page];
+});
+});
+
+// POS
+function loadPOS(){
+const c=document.getElementById('posProducts');
+const f=currentCategory==='all'?products:products.filter(x=>x.category===currentCategory);
+c.innerHTML=f.map(p=>`<div class="product-card" onclick="addToCart(${p.id})"><div class="emoji">${p.emoji}</div><h4>${p.name}</h4><p class="cat">${p.category}</p><p class="price">₱${p.price.toFixed(2)}</p></div>`).join('');
+}
+document.querySelectorAll('.category-btn').forEach(b=>{
+b.addEventListener('click',function(){document.querySelectorAll('.category-btn').forEach(x=>x.classList.remove('active'));this.classList.add('active');currentCategory=this.dataset.cat;loadPOS();});
+});
+function addToCart(id){
+const p=products.find(x=>x.id===id),e=cart.find(x=>x.id===id);
+if(e){if(e.quantity<p.stock){e.quantity++;showToast('success','Updated',p.name+' qty: '+e.quantity);}else showToast('warning','Stock','Only '+p.stock+' left');}
+else{cart.push({...p,quantity:1});showToast('success','Added',p.name+' added');}
+updateCart();
+}
+function updateCart(){
+const c=document.getElementById('cartItems');
+if(cart.length===0)c.innerHTML='<div style="text-align:center;padding:2rem;color:var(--gray)"><i class="fas fa-shopping-cart" style="font-size:2rem"></i><p>Cart is empty</p></div>';
+else c.innerHTML=cart.map((item,i)=>`<div class="cart-item"><div class="emoji">${item.emoji}</div><div class="cart-item-info"><h4>${item.name}</h4><p>₱${item.price.toFixed(2)}</p></div><div class="qty-control"><button class="qty-btn" onclick="updateQty(${i},-1)">-</button><span class="qty-value">${item.quantity}</span><button class="qty-btn" onclick="updateQty(${i},1)">+</button></div><div style="text-align:right"><p style="font-weight:600">₱${(item.price*item.quantity).toFixed(2)}</p><button class="action-btn" onclick="removeItem(${i})"><i class="fas fa-times" style="color:var(--danger);font-size:0.7rem"></i></button></div></div>`).join('');
+const s=cart.reduce((a,b)=>a+(b.price*b.quantity),0),t=s*0.12;
+document.getElementById('subtotal').textContent='₱'+s.toFixed(2);
+document.getElementById('tax').textContent='₱'+t.toFixed(2);
+document.getElementById('total').textContent='₱'+(s+t).toFixed(2);
+}
+function updateQty(i,d){const item=cart[i],p=products.find(x=>x.id===item.id);if(d>0&&item.quantity>=p.stock){showToast('warning','Stock','Only '+p.stock+' left');return;}item.quantity+=d;if(item.quantity<=0)cart.splice(i,1);updateCart();}
+function removeItem(i){cart.splice(i,1);updateCart();showToast('success','Removed','Item removed');}
+document.getElementById('clearCart').addEventListener('click',function(){cart=[];updateCart();showToast('success','Cleared','Cart emptied');});
+document.getElementById('checkoutBtn').addEventListener('click',function(){if(cart.length===0){showToast('warning','Empty','Add items first');return;}const t=cart.reduce((a,b)=>a+(b.price*b.quantity),0);document.getElementById('paymentTotal').textContent='₱'+(t*1.12).toFixed(2);openModal('paymentModal');});
+document.getElementById('confirmPayment').addEventListener('click',async function(){
+if(cart.length===0){showToast('warning','Empty','No items to process');return;}
+
+const subtotal=cart.reduce((a,b)=>a+(b.price*b.quantity),0);
+const tax=subtotal*0.12;
+const total=subtotal+tax;
+const method=document.getElementById('paymentMethod').value;
+const amountInput=document.getElementById('amountReceived').value.trim();
+if(!amountInput||amountInput===''||isNaN(parseFloat(amountInput))){
+showToast('error','Invalid','Please enter the amount received');
+document.getElementById('amountReceived').focus();
+return;
+}
+const received=parseFloat(amountInput);
+const change=received-total;
+
+if(change<0){showToast('error','Insufficient','Amount received is less than total');return;}
+
+// Generate receipt ID
+const now=new Date();
+const receiptId='RCP-'+now.getFullYear()+String(now.getMonth()+1).padStart(2,'0')+String(now.getDate()).padStart(2,'0')+'-'+String(Math.floor(Math.random()*900)+100);
+
+// Build receipt items HTML
+const itemsHtml=cart.map(item=>{
+const lineTotal=item.price*item.quantity;
+return `<div style="display:flex;justify-content:space-between;margin-bottom:0.3rem;"><span>${item.emoji} ${item.name} x${item.quantity}</span><span>₱${lineTotal.toFixed(2)}</span></div>`;
+}).join('');
+
+// Fill receipt data
+document.getElementById('receiptId').textContent=receiptId;
+document.getElementById('receiptDate').textContent=now.toLocaleDateString('en-US',{month:'short',day:'numeric',year:'numeric'});
+document.getElementById('receiptTime').textContent=now.toLocaleTimeString('en-US',{hour:'2-digit',minute:'2-digit'});
+document.getElementById('receiptCashier').textContent=currentUser?currentUser.name:'Cashier';
+document.getElementById('receiptItems').innerHTML=itemsHtml;
+document.getElementById('receiptSubtotal').textContent='₱'+subtotal.toFixed(2);
+document.getElementById('receiptTax').textContent='₱'+tax.toFixed(2);
+document.getElementById('receiptTotal').textContent='₱'+total.toFixed(2);
+document.getElementById('receiptPaymentMethod').textContent=method;
+document.getElementById('receiptPaid').textContent='₱'+received.toFixed(2);
+document.getElementById('receiptChange').textContent='₱'+change.toFixed(2);
+
+// Save order to Neon DB (also deducts stock server-side)
+try {
+  await apiFetch('/api/orders',{
+    method:'POST',
+    body:JSON.stringify({
+      receipt_id:receiptId,
+      cashier:currentUser?currentUser.name:'Cashier',
+      subtotal:subtotal.toFixed(2),
+      tax:tax.toFixed(2),
+      total:total.toFixed(2),
+      payment_method:method,
+      amount_received:received.toFixed(2),
+      change_amount:change.toFixed(2),
+      items:cart.map(i=>({id:i.id,name:i.name,emoji:i.emoji,price:i.price,quantity:i.quantity}))
+    })
+  });
+  // Update local product stock so UI reflects immediately
+  cart.forEach(item=>{
+    const p=products.find(x=>x.id===item.id);
+    if(p) p.stock=Math.max(0,p.stock-item.quantity);
+  });
+  loadDashboardStats();
+} catch(err){
+  showToast('warning','Warning','Order saved locally but DB sync failed: '+err.message);
+}
+
+showToast('success','Paid!','Transaction complete');
+closeModal('paymentModal');
+
+// Show receipt modal
+setTimeout(()=>{openModal('receiptModal');},300);
+
+cart=[];
+updateCart();
+loadPOS();loadProducts();loadInventory();
+document.getElementById('amountReceived').value='';
+});
+
+function printReceipt(){
+const receiptContent=document.getElementById('receiptContent').innerHTML;
+const printWindow=window.open('','_blank','width=400,height=600');
+printWindow.document.write(`
+<html><head><title>Receipt</title>
+<style>
+body{font-family:'Courier New',monospace;font-size:12px;padding:20px;color:#1e293b;}
+h2{font-family:'Poppins',sans-serif;font-size:16px;margin-bottom:5px;}
+</style></head><body>${receiptContent}
+<!-- Order Detail Modal -->
+<div class="modal-overlay" id="orderDetailModal">
+<div class="modal" style="max-width:450px;">
+<div class="modal-header"><h2 id="orderDetailTitle">Order Details</h2><button class="modal-close" onclick="closeModal('orderDetailModal')"><i class="fas fa-times"></i></button></div>
+<div id="orderDetailContent" style="padding:0.5rem 0;"></div>
+<div class="modal-actions" style="margin-top:1rem;padding-top:1rem;border-top:1px solid var(--gray-light);">
+<button type="button" class="btn btn-outline" onclick="closeModal('orderDetailModal')">Close</button>
+<button type="button" class="btn btn-primary" id="orderDetailPrintBtn" onclick="printOrderFromModal()"><i class="fas fa-print"></i> Print</button>
+</div>
+</div>
+</div>
+
+</body></html>
+`);
+printWindow.document.close();
+printWindow.focus();
+setTimeout(()=>{printWindow.print();printWindow.close();},250);
+}
+
+// Products Table
+let deleteTargetId=null;
+let editingId=null;
+
+function loadProducts(){
+const tbody=document.getElementById('productsTable');
+if(!tbody)return;
+tbody.innerHTML='';
+products.forEach(p=>{
+const tr=document.createElement('tr');
+tr.innerHTML=`<td><div style="display:flex;align-items:center;gap:0.75rem"><span style="font-size:2rem">${p.emoji}</span><div><h4 style="font-weight:700;font-size:0.9rem;margin-bottom:0.2rem;" class="product-name">${p.name}</h4><p style="font-size:0.75rem;" class="product-id">ID: #${String(p.id).padStart(3,'0')}</p></div></div></td><td style="font-weight:500;" class="product-category">${p.category}</td><td><strong style="color:#3b82f6;font-size:0.9rem;">₱${p.price.toFixed(2)}</strong></td><td style="font-weight:600;" class="product-stock">${p.stock}</td><td><span class="badge ${p.stock>20?'badge-success':p.stock>10?'badge-warning':'badge-danger'}">${p.stock>20?'In Stock':p.stock>10?'Low':'Critical'}</span></td><td><div class="action-btns"><button class="action-btn edit-btn" data-id="${p.id}" title="Edit" style="width:32px;height:32px;"><i class="fas fa-edit" style="color:#3b82f6"></i></button><button class="action-btn delete-btn" data-id="${p.id}" title="Delete" style="width:32px;height:32px;"><i class="fas fa-trash" style="color:var(--danger)"></i></button></div></td>`;
+tbody.appendChild(tr);
+});
+
+// Attach event listeners to buttons
+tbody.querySelectorAll('.edit-btn').forEach(btn=>{
+btn.addEventListener('click',function(){
+const id=parseInt(this.getAttribute('data-id'));
+openEditModal(id);
+});
+});
+
+tbody.querySelectorAll('.delete-btn').forEach(btn=>{
+btn.addEventListener('click',function(){
+const id=parseInt(this.getAttribute('data-id'));
+openDeleteModal(id);
+});
+});
+}
+
+function openEditModal(id){
+const p=products.find(x=>x.id===id);
+if(!p)return;
+editingId=id;
+document.getElementById('editProductId').value=p.id;
+document.getElementById('editProductName').value=p.name;
+document.getElementById('editProductCategory').value=p.category;
+document.getElementById('editProductPrice').value=p.price;
+document.getElementById('editProductStock').value=p.stock;
+openModal('editProductModal');
+}
+
+document.getElementById('editProductForm').addEventListener('submit',async function(e){
+e.preventDefault();
+if(!editingId)return;
+
+const name=document.getElementById('editProductName').value;
+const category=document.getElementById('editProductCategory').value;
+const price=parseFloat(document.getElementById('editProductPrice').value);
+const stock=parseInt(document.getElementById('editProductStock').value);
+const emojis={Fruits:"🍎",Vegetables:"🥕",Meat:"🍗",Dairy:"🥛",Beverages:"🥤",Snacks:"🥔",Household:"🧼"};
+const emoji=emojis[category]||"📦";
+
+try {
+  const updated = await apiFetch('/api/products/'+editingId,{method:'PUT',body:JSON.stringify({name,category,price,stock,emoji})});
+  const idx=products.findIndex(x=>x.id===editingId);
+  if(idx>-1) products[idx]={...updated,price:parseFloat(updated.price),stock:parseInt(updated.stock)};
+  editingId=null;
+  closeModal('editProductModal');
+  loadProducts();loadPOS();loadInventory();
+  showToast('success','Updated',name+' updated successfully');
+} catch(err){
+  showToast('error','Error','Failed to update: '+err.message);
+}
+});
+
+function openDeleteModal(id){
+deleteTargetId=id;
+openModal('deleteModal');
+}
+
+document.getElementById('confirmDelete').addEventListener('click',async function(){
+if(!deleteTargetId)return;
+const idx=products.findIndex(x=>x.id===deleteTargetId);
+const name=idx>-1?products[idx].name:'Product';
+try {
+  await apiFetch('/api/products/'+deleteTargetId,{method:'DELETE'});
+  if(idx>-1) products.splice(idx,1);
+  loadProducts();loadPOS();loadInventory();
+  showToast('success','Deleted',name+' removed from products');
+} catch(err){
+  showToast('error','Error','Failed to delete: '+err.message);
+}
+deleteTargetId=null;
+closeModal('deleteModal');
+});
+
+// Inventory
+let restockTargetId=null;
+
+function loadInventory(){
+const tbody=document.getElementById('inventoryTable');
+if(!tbody)return;
+tbody.innerHTML='';
+products.forEach(p=>{
+const tr=document.createElement('tr');
+tr.innerHTML=`<td><div style="display:flex;align-items:center;gap:0.75rem"><span style="font-size:2rem">${p.emoji}</span><div><h4 style="font-weight:700;font-size:0.9rem;margin-bottom:0.2rem;">${p.name}</h4><p style="font-size:0.75rem;color:var(--gray)">ID: #${String(p.id).padStart(3,'0')}</p></div></div></td><td style="font-weight:600;color:var(--dark)">${p.stock}</td><td style="color:var(--dark)">20</td><td><span class="badge ${p.stock>20?'badge-success':p.stock>10?'badge-warning':'badge-danger'}">${p.stock>20?'OK':p.stock>10?'Reorder':'Restock'}</span></td><td><button class="btn btn-primary restock-btn" data-id="${p.id}" style="padding:0.4rem 0.8rem;font-size:0.75rem"><i class="fas fa-plus"></i> Restock</button></td>`;
+tbody.appendChild(tr);
+});
+
+// Attach restock listeners
+tbody.querySelectorAll('.restock-btn').forEach(btn=>{
+btn.addEventListener('click',function(){
+const id=parseInt(this.getAttribute('data-id'));
+openRestockModal(id);
+});
+});
+}
+
+function openRestockModal(id){
+const p=products.find(x=>x.id===id);
+if(!p)return;
+restockTargetId=id;
+document.getElementById('restockCurrent').textContent=p.stock;
+document.getElementById('restockAmount').value=50;
+openModal('restockModal');
+}
+
+document.getElementById('confirmRestock').addEventListener('click',async function(){
+if(!restockTargetId)return;
+const p=products.find(x=>x.id===restockTargetId);
+if(!p)return;
+
+const amount=parseInt(document.getElementById('restockAmount').value);
+if(isNaN(amount)||amount<1){
+showToast('error','Invalid','Please enter a valid amount');
+return;
+}
+
+try {
+  const updated = await apiFetch('/api/products/'+restockTargetId+'/restock',{method:'PATCH',body:JSON.stringify({amount})});
+  p.stock=parseInt(updated.stock);
+  restockTargetId=null;
+  closeModal('restockModal');
+  loadInventory();loadProducts();loadPOS();
+  showToast('success','Restocked',p.name+' +'+amount+' units (New stock: '+p.stock+')');
+} catch(err){
+  showToast('error','Error','Failed to restock: '+err.message);
+}
+});
+
+// Add Product
+document.getElementById('addProductBtn').addEventListener('click',function(){openModal('addProductModal');});
+document.getElementById('addProductForm').addEventListener('submit',async function(e){
+e.preventDefault();
+const n=document.getElementById('newProductName').value,c=document.getElementById('newProductCategory').value,p=parseFloat(document.getElementById('newProductPrice').value),s=parseInt(document.getElementById('newProductStock').value);
+const emojis={Fruits:"🍎",Vegetables:"🥕",Meat:"🍗",Dairy:"🥛",Beverages:"🥤",Snacks:"🥔",Household:"🧼"};
+const emoji=emojis[c]||"📦";
+try {
+  const newProduct = await apiFetch('/api/products',{method:'POST',body:JSON.stringify({name:n,category:c,price:p,stock:s,emoji})});
+  products.push({...newProduct,price:parseFloat(newProduct.price),stock:parseInt(newProduct.stock)});
+  closeModal('addProductModal');loadPOS();loadProducts();loadInventory();
+  showToast('success','Added',n+' added successfully');this.reset();
+} catch(err){
+  showToast('error','Error','Failed to add product: '+err.message);
+}
+});
+
+// ─── SETTINGS ────────────────────────────────────────────────────────────────
+async function loadSettings(){
+  try {
+    const s = await apiFetch('/api/settings');
+    if(s.store_name) document.getElementById('settingStoreName').value=s.store_name;
+    if(s.store_address) document.getElementById('settingAddress').value=s.store_address;
+    if(s.tax_rate) document.getElementById('settingTax').value=s.tax_rate;
+    // Update receipt store address
+    const addrEl=document.getElementById('receiptStoreAddr');
+    if(addrEl&&s.store_address) addrEl.textContent=s.store_address;
+  } catch(err){ /* use defaults */ }
+}
+
+async function saveSettings(){
+  const store_name=document.getElementById('settingStoreName').value;
+  const store_address=document.getElementById('settingAddress').value;
+  const tax_rate=document.getElementById('settingTax').value;
+  try {
+    await apiFetch('/api/settings',{method:'POST',body:JSON.stringify({store_name,store_address,tax_rate})});
+    showToast('success','Saved','Store settings updated');
+    const addrEl=document.getElementById('receiptStoreAddr');
+    if(addrEl) addrEl.textContent=store_address;
+  } catch(err){
+    showToast('error','Error','Failed to save settings');
+  }
+}
+
+
+function closeModal(id){document.getElementById(id).classList.remove('active');}
+function showToast(type,title,msg){
+const c=document.getElementById('toastContainer');
+const t=document.createElement('div');t.className='toast '+type;
+t.innerHTML=`<i class="fas ${type==='success'?'fa-check-circle':type==='error'?'fa-times-circle':'fa-exclamation-circle'}"></i><div class="toast-content"><h4>${title}</h4><p>${msg}</p></div>`;
+c.appendChild(t);setTimeout(()=>t.remove(),3000);
+}
+
+// Dashboard Orders Data
+const dashboardOrders = [
+  {id:1,orderId:'ORD-001',customer:'Juan Dela Cruz',items:5,total:1250,status:'Done',date:'Jun 2, 2026',time:'10:30 AM',cashier:'Admin',payment:'Cash',products:[
+    {name:'Fresh Apples',qty:2,price:45,emoji:'🍎'},
+    {name:'Fresh Milk',qty:1,price:95,emoji:'🥛'},
+    {name:'Chicken Breast',qty:1,price:180,emoji:'🍗'},
+    {name:'Coca-Cola',qty:1,price:55,emoji:'🥤'},
+    {name:'Potato Chips',qty:1,price:35,emoji:'🥔'}
+  ]},
+  {id:2,orderId:'ORD-002',customer:'Maria Santos',items:3,total:890,status:'Processing',date:'Jun 2, 2026',time:'11:15 AM',cashier:'Cashier',payment:'GCash',products:[
+    {name:'Banana',qty:2,price:35,emoji:'🍌'},
+    {name:'Carrots',qty:1,price:25,emoji:'🥕'},
+    {name:'Detergent',qty:1,price:125,emoji:'🧼'}
+  ]},
+  {id:3,orderId:'ORD-003',customer:'Pedro Reyes',items:8,total:2340,status:'Done',date:'Jun 2, 2026',time:'09:45 AM',cashier:'Admin',payment:'Cash',products:[
+    {name:'Fresh Apples',qty:3,price:45,emoji:'🍎'},
+    {name:'Fresh Milk',qty:2,price:95,emoji:'🥛'},
+    {name:'Pork Liempo',qty:1,price:220,emoji:'🥩'},
+    {name:'Orange',qty:2,price:40,emoji:'🍊'}
+  ]}
+];
+
+// Print Individual Order
+function printOrder(orderId){
+  const order = dashboardOrders.find(o => o.id === orderId);
+  if(!order) return;
+
+  const subtotal = order.products.reduce((a,b) => a + (b.price * b.qty), 0);
+  const tax = subtotal * 0.12;
+
+  const itemsHtml = order.products.map(p => 
+    `<div style="display:flex;justify-content:space-between;margin-bottom:0.3rem;font-size:12px;">
+      <span>${p.emoji} ${p.name} x${p.qty} @ ₱${p.price.toFixed(2)}</span>
+      <span>₱${(p.price * p.qty).toFixed(2)}</span>
+    </div>`
+  ).join('');
+
+  const printContent = `
+    <div style="font-family:'Courier New',monospace;font-size:12px;padding:20px;color:#1e293b;max-width:300px;margin:0 auto;">
+      <div style="text-align:center;border-bottom:2px dashed #ccc;padding-bottom:10px;margin-bottom:15px;">
+        <h2 style="font-size:16px;margin:0;">FreshMart POS</h2>
+        <p style="font-size:10px;color:#666;margin:3px 0;">Grocery Store</p>
+        <p style="font-size:10px;color:#666;">Davao City</p>
+      </div>
+      <div style="margin-bottom:5px;"><span style="color:#666;">Order:</span> <strong>#${order.orderId}</strong></div>
+      <div style="margin-bottom:5px;"><span style="color:#666;">Customer:</span> ${order.customer}</div>
+      <div style="margin-bottom:5px;"><span style="color:#666;">Date:</span> ${order.date}</div>
+      <div style="margin-bottom:5px;"><span style="color:#666;">Time:</span> ${order.time}</div>
+      <div style="margin-bottom:10px;"><span style="color:#666;">Cashier:</span> ${order.cashier}</div>
+      <div style="border-top:1px dashed #ccc;border-bottom:1px dashed #ccc;padding:10px 0;margin:10px 0;">
+        ${itemsHtml}
+      </div>
+      <div style="display:flex;justify-content:space-between;margin-bottom:3px;font-size:12px;">
+        <span>Subtotal</span><span>₱${subtotal.toFixed(2)}</span>
+      </div>
+      <div style="display:flex;justify-content:space-between;margin-bottom:3px;font-size:12px;">
+        <span>Tax (12%)</span><span>₱${tax.toFixed(2)}</span>
+      </div>
+      <div style="display:flex;justify-content:space-between;font-weight:bold;font-size:14px;border-top:2px solid #333;padding-top:5px;margin-top:5px;">
+        <span>TOTAL</span><span>₱${order.total.toFixed(2)}</span>
+      </div>
+      <div style="margin-top:5px;font-size:11px;"><span style="color:#666;">Payment:</span> ${order.payment}</div>
+      <div style="text-align:center;margin-top:20px;padding-top:10px;border-top:2px dashed #ccc;">
+        <p style="font-size:10px;color:#666;">Thank you for shopping!</p>
+        <p style="font-size:9px;color:#999;">Please come again</p>
+      </div>
+    </div>
+  `;
+
+  const printWindow = window.open('', '_blank', 'width=400,height=600');
+  printWindow.document.write(`<html><head><title>Order #${order.orderId}</title></head><body>${printContent}</body></html>`);
+  printWindow.document.close();
+  printWindow.focus();
+  setTimeout(() => { printWindow.print(); printWindow.close(); }, 250);
+
+  showToast('success', 'Printed', 'Order #' + order.orderId + ' sent to printer');
+
+
+function printOrderFromModal(){
+  const title = document.getElementById('orderDetailTitle').textContent;
+  const orderId = parseInt(title.replace('Order #ORD-00', '').replace('Order #ORD-0', '').replace('Order #ORD-', ''));
+  if(!isNaN(orderId)){
+    printOrder(orderId);
+  }
+}
+
+}
+
+</script>
+
+<!-- Receipt Modal -->
+<div class="modal-overlay" id="receiptModal">
+<div class="modal" style="max-width:380px;padding:0;overflow:hidden;">
+<div id="receiptContent" style="background:#fff;color:#1e293b;padding:1.5rem;font-family:'Courier New',monospace;font-size:0.8rem;line-height:1.6;">
+<div style="text-align:center;border-bottom:2px dashed #e2e8f0;padding-bottom:1rem;margin-bottom:1rem;">
+<h2 style="font-family:'Poppins',sans-serif;font-size:1.2rem;margin-bottom:0.3rem;color:#1e293b;">FreshMart POS</h2>
+<p style="color:#64748b;font-size:0.7rem;">Grocery Store</p>
+<p style="color:#64748b;font-size:0.7rem;margin-top:0.3rem;" id="receiptStoreAddr">Davao City</p>
+</div>
+<div style="display:flex;justify-content:space-between;margin-bottom:0.5rem;">
+<span style="color:#64748b;">Receipt #</span>
+<span style="font-weight:700;" id="receiptId">RCP-001</span>
+</div>
+<div style="display:flex;justify-content:space-between;margin-bottom:0.5rem;">
+<span style="color:#64748b;">Date</span>
+<span id="receiptDate">Jun 1, 2026</span>
+</div>
+<div style="display:flex;justify-content:space-between;margin-bottom:0.5rem;">
+<span style="color:#64748b;">Time</span>
+<span id="receiptTime">10:30 AM</span>
+</div>
+<div style="display:flex;justify-content:space-between;margin-bottom:0.5rem;">
+<span style="color:#64748b;">Cashier</span>
+<span id="receiptCashier">Admin</span>
+</div>
+<div style="border-top:1px dashed #e2e8f0;border-bottom:1px dashed #e2e8f0;padding:0.75rem 0;margin:0.75rem 0;">
+<div id="receiptItems"></div>
+</div>
+<div style="margin-bottom:0.4rem;display:flex;justify-content:space-between;">
+<span style="color:#64748b;">Subtotal</span>
+<span id="receiptSubtotal">₱0.00</span>
+</div>
+<div style="margin-bottom:0.4rem;display:flex;justify-content:space-between;">
+<span style="color:#64748b;">Tax (12%)</span>
+<span id="receiptTax">₱0.00</span>
+</div>
+<div style="display:flex;justify-content:space-between;font-weight:700;font-size:1rem;border-top:2px solid #1e293b;padding-top:0.5rem;margin-top:0.5rem;">
+<span>TOTAL</span>
+<span id="receiptTotal">₱0.00</span>
+</div>
+<div style="margin-top:0.75rem;display:flex;justify-content:space-between;">
+<span style="color:#64748b;">Payment</span>
+<span id="receiptPaymentMethod">Cash</span>
+</div>
+<div style="display:flex;justify-content:space-between;">
+<span style="color:#64748b;">Amount Paid</span>
+<span id="receiptPaid">₱0.00</span>
+</div>
+<div style="display:flex;justify-content:space-between;font-weight:700;color:#16a34a;">
+<span>Change</span>
+<span id="receiptChange">₱0.00</span>
+</div>
+<div style="text-align:center;margin-top:1.5rem;padding-top:1rem;border-top:2px dashed #e2e8f0;">
+<p style="font-size:0.75rem;color:#64748b;">Thank you for shopping!</p>
+<p style="font-size:0.7rem;color:#94a3b8;margin-top:0.2rem;">Please come again</p>
+</div>
+</div>
+<div style="padding:1rem;display:flex;gap:0.5rem;background:var(--light);border-top:1px solid var(--gray-light);">
+<button class="btn btn-outline" onclick="closeModal('receiptModal')" style="flex:1;"><i class="fas fa-times"></i> Close</button>
+<button class="btn btn-primary" onclick="printReceipt()" style="flex:1;"><i class="fas fa-print"></i> Print</button>
+</div>
+</div>
+</div>
+
+</body>
+</html>
